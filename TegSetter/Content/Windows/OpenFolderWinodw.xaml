@@ -1,0 +1,33 @@
+﻿<Window x:Class="TegSetter.Content.Windows.OpenFolderWinodw"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TegSetter.Content.Windows"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow"
+        KeyDown="Window_KeyDown" 
+        Title="OpenFolderWinodw" Height="140" Width="400">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition  Width="80"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <!-- Заголовок для текстового поля -->
+        <TextBlock Text="Укажите путь к папке с файлами для обработки:" Margin="0,5" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" />
+        <!-- Поле для ввода текста -->
+        <TextBox x:Name="SelectedPathTaxtBox" Grid.Column="0" Grid.Row="1" Margin="0,0,5,5" />
+        <!-- Кнопка выбора папки -->
+        <Button x:Name="BroawseButton" Content="Обзор" Grid.Column="1" Grid.Row="1" 
+                Margin="0,0,0,5" Click="BroawseButton_Click" />
+        <!-- Кнопка принятия пути -->
+        <Button x:Name="OkButton" Content="Принять" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" 
+                HorizontalAlignment="Center" Width="100" Margin="0, 5" Click="OkButton_Click" />
+    </Grid>
+</Window>

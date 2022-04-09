@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="TegSetter.Content.Controls.Tags.TagsList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TegSetter.Content.Controls.Tags"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" Width="350">
+    <!-- Рамка вокруг контролла -->
+    <Border Background="#999" BorderBrush="Black" BorderThickness="2" CornerRadius="10" Margin="5" Padding="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="35" />
+            </Grid.RowDefinitions>
+            <!-- Панель скролла -->
+            <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <!-- Список тегов для работы -->
+                <StackPanel x:Name="TagsListBox" Background="Transparent" />
+            </ScrollViewer>
+            <!-- Кнопка обновления списка тегов -->
+            <Button x:Name="EditTagsListButton" Content="Изменить список тегов" Grid.Row="1" Margin="0, 5, 0, 0" Click="EditTagsListButton_Click" />
+        </Grid>
+    </Border>
+</UserControl>

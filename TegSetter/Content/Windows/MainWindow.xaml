@@ -1,0 +1,51 @@
+﻿<Window xmlns:Tags="clr-namespace:TegSetter.Content.Controls.Tags"  xmlns:Controls="clr-namespace:TegSetter.Content.Controls"  x:Class="TegSetter.Content.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TegSetter.Content.Windows"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Background="#444"
+        Title="TegSetter" Height="800" Width="1200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Строка заголовочной панели -->
+            <RowDefinition Height="45" />
+            <!-- Строка основной части -->
+            <RowDefinition  />
+            <!-- Строка панели листания -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <!-- Обводка верхней панели -->
+        <Border Background="#999" BorderBrush="Black" BorderThickness="2" CornerRadius="10" Margin="5" Padding="5">
+            <StackPanel Orientation="Horizontal">
+                <!-- Кнопка загрузки папки -->
+                <Button x:Name="LoadFolderButton" Content="Загрузить папку" Padding="5,0" Margin="0,0,5,0" Click="LoadFolderButton_Click"  />
+                <!-- Кнопка сохранения изменений -->
+                <Button x:Name="SaveChangesButton" Content="Сохранить изменения" Padding="5,0" Margin="0,0,5,0" Click="SaveChangesButton_Click" />
+                <!-- Кнопка окна тегов -->
+                <Button x:Name="TagsWindowButton" Content="Окно тегов" Padding="5,0" Margin="0,0,5,0" Click="TagsWindowButton_Click"  />
+            </StackPanel>
+        </Border>
+        <!-- Центральная панель -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="150" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <!-- Панель отображения картинки -->
+            <Controls:ViewImageControl x:Name="ImageControl" Grid.Row="0" Grid.Column="0" />
+            <!-- Панель тегов картинки -->
+            <Tags:ImageTags x:Name="ImageTagsControl" Grid.Row="2" Grid.Column="0" />
+            <!-- Панель тегов для добавления -->
+            <Tags:TagsList x:Name="TagsListControl" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" />
+        </Grid>        
+        <!-- Контролл панели листания -->
+        <Controls:PagingPanel x:Name="PagingControl" Grid.Row="2" />            
+    </Grid>
+</Window>
