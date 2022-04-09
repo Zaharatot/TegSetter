@@ -172,10 +172,11 @@ namespace TegSetter.Content.Clases.WorkClases
         /// <summary>
         /// Выполняем загрузку изображений из папки
         /// </summary>
-        /// <param name="path">Путь к папке с файлами</param>
-        public void LoadImages(string path) =>
+        /// <param name="info">Класс информации о загрузке</param>
+        /// <returns>Список загруженных изображений</returns>
+        public List<ImageInfo> LoadImages(LoadInfo info) =>
             //Выполняем загрузку изображений
-            _images = _imageLoader.LoadImages(path);
+            _images = _imageLoader.LoadImages(info);
 
         /// <summary>
         /// Сохраняем теги для изображений

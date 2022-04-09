@@ -162,7 +162,11 @@ namespace TegSetter.Content.Windows
             if (result.GetValueOrDefault(false))
             {
                 //Выполняем загрузку изображений для указанной папки
-                _mainWork.LoadImages(openFolderWinodw.SelectedPath);
+                _mainWork.LoadImages(new LoadInfo() { 
+                    Path = openFolderWinodw.SelectedPath,
+                    IsOnlyWithoutTags = openFolderWinodw.IsOnlyEmpty,
+                    IsRecursive = openFolderWinodw.IsRecurse
+                });
                 //Обновляем список тегов по загруженным картинкам
                 UpdateTagsList();
                 //Обновляем количество картинок

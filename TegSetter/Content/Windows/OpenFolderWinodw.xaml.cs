@@ -30,6 +30,25 @@ namespace TegSetter.Content.Windows
         }
 
         /// <summary>
+        /// Флаг рекурсивной загрузки изображений
+        /// </summary>
+        public bool IsRecurse
+        {
+            get => IsRecurseCheckBox.IsChecked.GetValueOrDefault(false);
+            set => IsRecurseCheckBox.IsChecked = value;
+        }
+
+        /// <summary>
+        /// Флаг загрузки только изображений без тегов
+        /// </summary>
+        public bool IsOnlyEmpty
+        {
+            get => IsOnlyEmptyCheckBox.IsChecked.GetValueOrDefault(false);
+            set => IsOnlyEmptyCheckBox.IsChecked = value;
+        }
+
+
+        /// <summary>
         /// Конструктор окна
         /// </summary>
         public OpenFolderWinodw()

@@ -72,34 +72,63 @@ namespace TegSetter.Content.Clases.WorkClases.Loaders
            //Переводим расширение в нижний регистр, и ищем его в списк едозволенных
            _allowedExtensions.Contains(extension.ToLower());
 
+        /// <summary>
+        /// Метод загрузеи картинок из директории
+        /// </summary>
+        /// <param name="directory">Директория для загрузки</param>
+        /// <returns>Загруженный список картинок</returns>
+        private List<ImageInfo> GetDirectoryImages(DirectoryInfo directory) =>
+            //Получаем из директории
+            directory
+                //Классы информации о дочерних файлах
+                .GetFiles()
+                //Выбираем из них только те, что имеют корректное расширение
+                .Where(file => IsAllowExtension(file.Extension))
+                //Приводим выбранные элементы к списку
+                .ToList()
+                //Конвертируем элементы в информацию об изображениях
+                .ConvertAll(file => LoadImageInfo(file));
 
+        /// <summary>
+        /// Выполняем загрузку изображений
+        /// </summary>
+        /// <param name="root">Корневая папка для загрузки</param>
+        /// <param name="isRecursive">Флаг рекурсивной загрузки</param>
+        /// <param name="images">Список, куда будут добавляться изображения</param>
+        private void LoadImages(DirectoryInfo root, bool isRecursive, List<ImageInfo> images)
+        {
+            //Загружаем картинки из папки
+            images.AddRange(GetDirectoryImages(root));
+            //Если стоит флаг рекурсии
+            if (isRecursive)
+                //Получаем все дочерние папки, и для каждой из них вызываем этот метод
+                root.GetDirectories().ToList().ForEach(dir => LoadImages(dir, isRecursive, images));
+        } 
 
 
         /// <summary>
         /// Выполняем загрузку изображений из папки
         /// </summary>
-        /// <param name="path">Путь к папке с файлами</param>
+        /// <param name="info">Класс информации о загрузке</param>
         /// <returns>Список загруженных изображений</returns>
-        public List<ImageInfo> LoadImages(string path)
+        public List<ImageInfo> LoadImages(LoadInfo info)
         {
             //Инициализируем выходной список
             List<ImageInfo> ex = new List<ImageInfo>();
             //Если путь вообще указан
-            if (!string.IsNullOrEmpty(path))
+            if (!string.IsNullOrEmpty(info.Path))
             {
                 //Инициализируем класс информации о папке
-                DirectoryInfo directory = new DirectoryInfo(path);
+                DirectoryInfo directory = new DirectoryInfo(info.Path);
                 //Если папка существует
                 if (directory.Exists)
-                    //Получаем из него классы информации о дочерних файлах
-                    ex = directory.GetFiles()
-                    //Выбираем из них только те, что имеют корректное расширение
-                    .Where(file => IsAllowExtension(file.Extension))
-                    //Приводим выбранные элементы к списку
-                    .ToList()
-                    //Конвертируем элементы в информацию об изображениях
-                    .ConvertAll(file => LoadImageInfo(file));
+                    //Выполняем загрузку изображений
+                    LoadImages(directory, info.IsRecursive, ex);
             }
+            //Если стоит флаг загрузки только картинок без тегов
+            if (info.IsOnlyWithoutTags)
+                //Удаляем из списка все картинки, которые имеют теги
+                ex.RemoveAll(image => (image.Tags.Count > 0));
             //Возвращаем результат
             return ex;
         }

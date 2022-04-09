@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="Content\Clases\DataClases\Global\GlobalEvents.cs" />
     <Compile Include="Content\Clases\DataClases\Info\ImageInfo.cs" />
+    <Compile Include="Content\Clases\DataClases\Info\LoadInfo.cs" />
     <Compile Include="Content\Clases\DataClases\Info\TagsWrapper.cs" />
     <Compile Include="Content\Clases\DataClases\Keyboard\KeyRange.cs" />
     <Compile Include="Content\Clases\WorkClases\Keyboard\HotKeyCheck.cs" />

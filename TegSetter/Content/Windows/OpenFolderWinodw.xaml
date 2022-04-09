@@ -7,13 +7,15 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow"
         KeyDown="Window_KeyDown" 
-        Title="OpenFolderWinodw" Height="140" Width="400">
+        Title="OpenFolderWinodw" Height="180" Width="400">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition  Width="80"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -26,8 +28,13 @@
         <!-- Кнопка выбора папки -->
         <Button x:Name="BroawseButton" Content="Обзор" Grid.Column="1" Grid.Row="1" 
                 Margin="0,0,0,5" Click="BroawseButton_Click" />
+        <!-- Чекбокс рекурсивной загрузки -->
+        <CheckBox x:Name="IsRecurseCheckBox" Content="Загрузка элементов из дочерних папок" Grid.Column="0" Grid.Row="2" />
+        <!-- Чекбокс загрузки только элементов без тегов -->
+        <CheckBox x:Name="IsOnlyEmptyCheckBox" Content="Загрузка только элементов без тегов" Grid.Column="0" Grid.Row="3" />
+
         <!-- Кнопка принятия пути -->
-        <Button x:Name="OkButton" Content="Принять" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" 
+        <Button x:Name="OkButton" Content="Принять" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" 
                 HorizontalAlignment="Center" Width="100" Margin="0, 5" Click="OkButton_Click" />
     </Grid>
 </Window>
