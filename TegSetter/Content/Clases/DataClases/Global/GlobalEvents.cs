@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TegSetter.Content.Clases.DataClases.Info;
 
 namespace TegSetter.Content.Clases.DataClases.Global
 {
@@ -19,7 +20,7 @@ namespace TegSetter.Content.Clases.DataClases.Global
         /// Делегат события запроса на добавление тега картинке
         /// </summary>
         /// <param name="tag">Тег для добавления</param>
-        public delegate void AddTagRequestEventHandler(string tag);
+        public delegate void AddTagRequestEventHandler(TagInfo tag);
 
         /// <summary>
         /// Событие запроса перехода на следующую страницу
@@ -53,7 +54,7 @@ namespace TegSetter.Content.Clases.DataClases.Global
         /// Метод вызова события запроса на добавление тега картинке
         /// </summary>
         /// <param name="tag">Тег для добавления</param>
-        public static void InvokeAddTagRequest(string tag) =>
+        public static void InvokeAddTagRequest(TagInfo tag) =>
             AddTagRequest?.Invoke(tag);
 
 

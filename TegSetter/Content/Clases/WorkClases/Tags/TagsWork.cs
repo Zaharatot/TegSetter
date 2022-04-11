@@ -27,9 +27,13 @@ namespace TegSetter.Content.Clases.WorkClases.Tags
         /// <param name="currentList">Текущий список тегов</param>
         /// <param name="scannedList">Считанный из файлов список тегов</param>
         /// <returns>Список новых считанных тегов</returns>
-        public List<string> GetNewTags(List<string> currentList, List<string> scannedList) =>
+        public List<string> GetNewTags(List<TagInfo> currentList, List<string> scannedList)
+        {
+            //Получаем список имён тегов из списка классов тегов
+            IEnumerable<string> tags = currentList.Select(tag => tag.Name);
             //Получаем теги, которые есть в считанном списке, но которых нет в общем
-            scannedList.Except(currentList).ToList();
+            return scannedList.Except(tags).ToList();
+        }
 
         /// <summary>
         /// Получаем список тегов из изображений

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TegSetter.Content.Clases.DataClases.Info;
 
 namespace TegSetter.Content.Controls.Tags
 {
@@ -36,7 +37,7 @@ namespace TegSetter.Content.Controls.Tags
         private void Elem_DeleteTagRequest(TagControl tag)
         {
             //Вызываем месседжбокс с запросом удаления
-            MessageBoxResult result = MessageBox.Show($"Вы действительно хотите удалить тег '{tag.TagText}'?", 
+            MessageBoxResult result = MessageBox.Show($"Вы действительно хотите удалить тег '{tag.GetTag().Name}'?", 
                 "Запрос удаления", MessageBoxButton.YesNo);
             //Удаляем только при подтверждении
             if (result == MessageBoxResult.Yes)
@@ -53,14 +54,15 @@ namespace TegSetter.Content.Controls.Tags
         /// </summary>
         /// <param name="tag">Тег для добавления контролла</param>
         /// <returns>Созданный контролл</returns>
-        private TagControl CreateTagControl(string tag)
+        private TagControl CreateTagControl(TagInfo tag)
         {
             //Инициализируем контролл тега
             TagControl elem = new TagControl() { 
-                TagText = tag,
                 IsRemoveButtonVisible = true,
                 TagLetter = null
             };
+            //Проставляем тег в контролл
+            elem.SetTag(tag);
             //Добавляем обработчик события запроса на удаление тега
             elem.DeleteTagRequest += Elem_DeleteTagRequest;
             //Возвращаем результат
@@ -95,12 +97,12 @@ namespace TegSetter.Content.Controls.Tags
         /// Проставляем теги в контролл
         /// </summary>
         /// <param name="tags">Список тегов изображения</param>
-        public void SetTags(List<string> tags)
+        public void SetTags(List<TagInfo> tags)
         {
             // Выполняем удаление всех тегов с панели
             RemoveTags();
-            //Проходимся по строкам тегов, и добавляем только уникальные
-            foreach (string tag in tags.Distinct())
+            //Проходимся по строкам тегов, и добавляем только уникальные сортируя их по имени
+            foreach (TagInfo tag in tags.Distinct().OrderBy(tag => tag.Name))
                 //Генерируем контроллы тегов и добавляем на панель
                 TagsPanel.Children.Add(CreateTagControl(tag));
         }
@@ -109,10 +111,10 @@ namespace TegSetter.Content.Controls.Tags
         /// Добавляем тег контроллу
         /// </summary>
         /// <param name="tag">Тег для добавления</param>
-        public void AddTag(string tag)
+        public void AddTag(TagInfo tag)
         {
             //Если данного тега нет в списке текущих
-            if(!GetTags().Contains(tag))
+            if(!GetTags().Select(tg => tg.Name).Contains(tag.Name))
                 //Генерируем контроллы тегов и добавляем на панель
                 TagsPanel.Children.Add(CreateTagControl(tag));
         }
@@ -121,14 +123,14 @@ namespace TegSetter.Content.Controls.Tags
         /// Получаем все теги из контролла
         /// </summary>
         /// <returns>Список текущих добавленных тегов</returns>
-        public List<string> GetTags()
+        public List<TagInfo> GetTags()
         {
             //Инициализируем список тегов
-            List<string> ex = new List<string>();
+            List<TagInfo> ex = new List<TagInfo>();
             //Проходимся по тегам панели
             foreach (TagControl elem in TagsPanel.Children)
                 //Добавляем имя тега в список
-                ex.Add(elem.TagText);
+                ex.Add(elem.GetTag());
             //Возвращаем результат, при этом - добавляя только уникальные теги
             return ex.Distinct().ToList();
         }

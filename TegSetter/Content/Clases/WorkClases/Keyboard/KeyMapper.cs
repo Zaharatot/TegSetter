@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using TegSetter.Content.Clases.DataClases.Info;
 using TegSetter.Content.Clases.DataClases.Keyboard;
 
 namespace TegSetter.Content.Clases.WorkClases.Keyboard
@@ -71,12 +72,14 @@ namespace TegSetter.Content.Clases.WorkClases.Keyboard
         /// </summary>
         /// <param name="tags">Список тегов</param>
         /// <returns>Словарь пар клавиша -> тег</returns>
-        public Dictionary<Key, string> PairKeysToTags(List<string> tags)
+        public Dictionary<Key, TagInfo> PairKeysToTags(List<TagInfo> tags)
         {
             //Инициализируем список клавишь
-            Dictionary<Key, string> ex = new Dictionary<Key, string>();
+            Dictionary<Key, TagInfo> ex = new Dictionary<Key, TagInfo>();
             //Лимитируем максимум для цикла
             int max = Math.Min(_validKeys.Count, tags.Count);
+            //Сортируем теги по имени
+            tags = tags.OrderBy(tag => tag).ToList();
             //Проходимся в цикле по всем элементам
             for (int i = 0; i < max; i++)
                 //Добавлем в словарь пары из клавиши и тега

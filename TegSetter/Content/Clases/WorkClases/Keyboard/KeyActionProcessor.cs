@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using TegSetter.Content.Clases.DataClases.Global;
+using TegSetter.Content.Clases.DataClases.Info;
 
 namespace TegSetter.Content.Clases.WorkClases.Keyboard
 {
@@ -20,7 +21,7 @@ namespace TegSetter.Content.Clases.WorkClases.Keyboard
         /// <summary>
         /// Словарь тегов связанный с клавишами
         /// </summary>
-        private Dictionary<Key, string> _tags;
+        private Dictionary<Key, TagInfo> _tags;
 
         /// <summary>
         /// Конструктор класса
@@ -36,7 +37,7 @@ namespace TegSetter.Content.Clases.WorkClases.Keyboard
         private void Init()
         {
             //Инициализируем дефолтные значения
-            _tags = new Dictionary<Key, string>();
+            _tags = new Dictionary<Key, TagInfo>();
             //Инициализируем используемые классы
             _notActionKeyCheck = new HotKeyCheck();
         }
@@ -112,7 +113,7 @@ namespace TegSetter.Content.Clases.WorkClases.Keyboard
         /// Проставляем новый словарь тегов
         /// </summary>
         /// <param name="tags">Новый словарь тегов</param>
-        public void SetNewTagsDict(Dictionary<Key, string> tags) =>
+        public void SetNewTagsDict(Dictionary<Key, TagInfo> tags) =>
             _tags = tags;
     }
 }

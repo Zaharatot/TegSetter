@@ -92,7 +92,7 @@ namespace TegSetter.Content.Windows
         /// Обработчик события запроса на добавление тега картинке
         /// </summary>
         /// <param name="tag">Тег для добавления</param>
-        private void GlobalEvents_AddTagRequest(string tag)
+        private void GlobalEvents_AddTagRequest(TagInfo tag)
         {
             //Получаем идентификатор страницы
             int id = PagingControl.GetPageId();
@@ -107,7 +107,7 @@ namespace TegSetter.Content.Windows
         /// </summary>
         private void MainWindow_KeyDown(object sender, RoutedEventArgs e) =>
             //Вызываем обработку нажатия на клавишу
-            _mainWork.ProcessKeyPress((System.Windows.Input.KeyEventArgs)e);
+            _mainWork.ProcessKeyPress((KeyEventArgs)e);
 
 
         /// <summary>
@@ -118,8 +118,10 @@ namespace TegSetter.Content.Windows
         {
             //Загруждаем картинку по идентификатору
             ImageInfo image = _mainWork.LoadImage(currentId);
+            //ПОлучаем теги по именам из картинки
+            List<TagInfo> tags = _mainWork.GetSystemTags(image.Tags);
             //Проставляем теги картинки в контролл
-            ImageTagsControl.SetTags(image.Tags);
+            ImageTagsControl.SetTags(tags);
             //ЗАгружаем саму карртинку
             ImageControl.LoadImage(image.Path);
         }
@@ -139,9 +141,9 @@ namespace TegSetter.Content.Windows
             if (result.GetValueOrDefault(false))
             {
                 //Получаем выбранные теги
-                List<string> tags = tagSelectorWindow.GetSelectedTags();
-                //Пейрим теги к кнопкам
-                Dictionary<Key, string> tagsDict = _mainWork.PairKeysToTags(tags);
+                List<TagInfo> tags = tagSelectorWindow.GetSelectedTags();
+                //Пейрим теги отсротирвоанные по имени к кнопкам
+                Dictionary<Key, TagInfo> tagsDict = _mainWork.PairKeysToTags(tags);
                 //ПРоставляем в панель словарь тегов
                 TagsListControl.SetTags(tagsDict);
                 //Проставляем словарь тегов для обработки нажатий
@@ -201,14 +203,12 @@ namespace TegSetter.Content.Windows
         {
             //Инициализируем окно редактирования списка тегов
             EditTagsWindow editTagsWindow = new EditTagsWindow();
-            //Проставляем теги в окно
+            //Проставляем текущий список тегов в окно
             editTagsWindow.SetTags(_mainWork.GetTags());
-            //Отображаем окно как диалоговое
-            bool? result = editTagsWindow.ShowDialog();
-            //Если окно закрылось с успехом
-            if (result.GetValueOrDefault(false))
-                //Проставляем список тегов для сохранения
-                _mainWork.SetTags(editTagsWindow.GetTags());
+            //Отображаем окно тегов как диалоговое
+            editTagsWindow.ShowDialog();
+            //Сохраняем измененённый список тегов
+            _mainWork.SetTags(editTagsWindow.GetTags());
         }
 
         /// <summary>
@@ -223,8 +223,10 @@ namespace TegSetter.Content.Windows
             {
                 //Инициализируем окно выбора тегов
                 TagSelectorWindow tagSelectorWindow = new TagSelectorWindow();
+                //КОнвертируем теги
+                List<TagInfo> tags = newTags.ConvertAll(tag => new TagInfo(tag, ""));
                 //Загружаем в окно список тегов для добавления
-                tagSelectorWindow.SetTagsToList(newTags);
+                tagSelectorWindow.SetTagsToList(tags);
                 //Отображаем окно как диалоговое
                 bool? result = tagSelectorWindow.ShowDialog();
                 //Если окно закрылось с успехом

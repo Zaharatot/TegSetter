@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TegSetter.Content.Clases.DataClases.Info;
 
 namespace TegSetter.Content.Controls.Tags
 {
@@ -40,15 +41,6 @@ namespace TegSetter.Content.Controls.Tags
         }
 
         /// <summary>
-        /// Текст тега
-        /// </summary>
-        public string TagText
-        {
-            get => TagNameRun.Text;
-            set => TagNameRun.Text = value;
-        }
-
-        /// <summary>
         /// Буква тега
         /// </summary>
         public Key? TagLetter
@@ -57,11 +49,26 @@ namespace TegSetter.Content.Controls.Tags
         }
 
         /// <summary>
+        /// Класс информации о теге
+        /// </summary>
+        public TagInfo _tag;
+
+        /// <summary>
         /// Конструктор 
         /// </summary>
         public TagControl()
         {
             InitializeComponent();
+            Init();
+        }
+        
+        /// <summary>
+        /// Инициализатор контролла
+        /// </summary>
+        private void Init()
+        {
+            //Проставляем дефолтные значения
+            _tag = null;
         }
 
         /// <summary>
@@ -71,5 +78,24 @@ namespace TegSetter.Content.Controls.Tags
             //Вызываем запрос удаления тега
             DeleteTagRequest?.Invoke(this);
 
+
+        /// <summary>
+        /// Проставляем в контролл информацию о теге
+        /// </summary>
+        /// <param name="tag">Информация о теге</param>
+        public void SetTag(TagInfo tag)
+        {
+            //Проставляем переданные значения
+            _tag = tag;
+            //Проставляем имя тега и описание
+            TagNameRun.Text = tag.Name;
+            ToolTipTextBlock.Text = tag.Description;
+        }
+
+        /// <summary>
+        /// Метод получения содержимого тега
+        /// </summary>
+        /// <returns>Класс тега</returns>
+        public TagInfo GetTag() => _tag;
     }
 }

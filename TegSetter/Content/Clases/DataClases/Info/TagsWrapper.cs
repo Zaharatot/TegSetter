@@ -15,7 +15,7 @@ namespace TegSetter.Content.Clases.DataClases.Info
         /// <summary>
         /// Список тегов
         /// </summary>
-        public List<string> Tags { get; set; }
+        public List<TagInfo> Tags { get; set; }
 
 
         /// <summary>
@@ -24,14 +24,14 @@ namespace TegSetter.Content.Clases.DataClases.Info
         public TagsWrapper()
         {
             //Проставляем дефолтные значения
-            Tags = new List<string>();
+            Tags = new List<TagInfo>();
         }
 
         /// <summary>
         /// Конструктор класса
         /// </summary>
         /// <param name="tags">Список тегов</param>
-        public TagsWrapper(List<string> tags)
+        public TagsWrapper(List<TagInfo> tags)
         {
             //Проставляем переданные значения
             Tags = tags;

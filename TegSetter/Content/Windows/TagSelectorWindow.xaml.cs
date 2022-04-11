@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TegSetter.Content.Clases.DataClases.Info;
+using TegSetter.Content.Controls.Tags;
 
 namespace TegSetter.Content.Windows
 {
@@ -50,38 +52,58 @@ namespace TegSetter.Content.Windows
                 this.DialogResult = false;
         }
 
+        /// <summary>
+        /// Создаём контролл чекбокса для тега
+        /// </summary>
+        /// <param name="tag">Инфомрация о теге</param>
+        /// <returns>Контролл чекбокса</returns>
+        private CheckBox CreateCheckBox(TagInfo tag)
+        {
+            //Инициализируем контролл тега
+            TagControl elem = new TagControl() {
+                IsRemoveButtonVisible = false,
+                TagLetter = null
+            };
+            //Проставляем тег в контролл
+            elem.SetTag(tag);
+            //СОздаём чекбокс с контентом в виде контролла тега
+            return new CheckBox() { Content = elem };
+        }
 
 
         /// <summary>
         /// Проставляем теги в список
         /// </summary>
         /// <param name="tags">Список тегов для добавления</param>
-        public void SetTagsToList(List<string> tags)
+        public void SetTagsToList(List<TagInfo> tags)
         {
             //Удаляем все старые элементы из списка
             TagsListBox.Items.Clear();
             //Проходимся по тегам
-            foreach (var tag in tags)
+            foreach (var tag in tags.OrderBy(tag => tag.Name))
                 //Добавляем теги на контролл, в виде чекбоксов
-                TagsListBox.Items.Add(new CheckBox() {
-                    Content = tag
-                });
+                TagsListBox.Items.Add(CreateCheckBox(tag));
         }
 
         /// <summary>
         /// Получаем список выбранных тегов
         /// </summary>
         /// <returns>Список выбранных тегов</returns>
-        public List<string> GetSelectedTags()
+        public List<TagInfo> GetSelectedTags()
         {
+            TagControl elem;
             //Инициализируем выходной список
-            List<string> ex = new List<string>();
+            List<TagInfo> ex = new List<TagInfo>();
             //Проходимся по чекбоксам
             foreach (CheckBox checkBox in TagsListBox.Items)
                 //Если тег выбран
                 if (checkBox.IsChecked.GetValueOrDefault(false))
+                {
+                    //Получаем контролл тега
+                    elem = (TagControl)checkBox.Content;
                     //Добавляем его в список
-                    ex.Add((string)checkBox.Content);
+                    ex.Add(elem.GetTag());
+                }
             //Возвращаем результат
             return ex;
         }

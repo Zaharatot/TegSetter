@@ -54,7 +54,7 @@ namespace TegSetter.Content.Clases.WorkClases.Loaders
         /// Выполняем загрузку списка тегов
         /// </summary>
         /// <returns>Список тегов</returns>
-        public List<string> LoadTags()
+        public List<TagInfo> LoadTags()
         {
             //Инициализируем класс-обёртку
             TagsWrapper ex = new TagsWrapper();
@@ -74,7 +74,7 @@ namespace TegSetter.Content.Clases.WorkClases.Loaders
         /// Выполняем сохранение списка тегов
         /// </summary>
         /// <param name="tags">Список тегов для сохранения</param>
-        public void SaveTags(List<string> tags)
+        public void SaveTags(List<TagInfo> tags)
         {
             //Инициаализируем поток в памяти
             using (MemoryStream ms = new MemoryStream())

@@ -8,6 +8,9 @@
              Height="50" d:DesignWidth="180">
     <!-- Рамка для тега -->
     <Border Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5">
+        <Border.ToolTip>
+            <TextBlock x:Name="ToolTipTextBlock" />
+        </Border.ToolTip>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />

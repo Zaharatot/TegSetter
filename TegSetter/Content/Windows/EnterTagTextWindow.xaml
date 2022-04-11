@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen"
         KeyDown="Window_KeyDown" FocusManager.FocusedElement="{Binding ElementName=TagNameTextBox}"
-        Title="EnterTagTextWindow" Height="120" Width="300">
+        Title="EnterTagTextWindow" Height="165" Width="300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -19,6 +19,10 @@
             <TextBlock Text="Введите текст тега:" />
             <!-- Текст тега -->
             <TextBox x:Name="TagNameTextBox" Margin="0,5" />
+            <!-- Заголовок для описания тега -->
+            <TextBlock Text="Введите описание тега:" />
+            <!-- Описание тега -->
+            <TextBox x:Name="TagDescriptionTextBox" Margin="0,5" />
         </StackPanel>
                 <!-- Кнопка принятия изменений -->
         <Button x:Name="OkButton" Content="Ок" Grid.Row="1" Margin="5" 

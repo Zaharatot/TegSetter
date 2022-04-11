@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TegSetter.Content.Clases.DataClases.Info;
 
 namespace TegSetter.Content.Windows
 {
@@ -18,15 +19,7 @@ namespace TegSetter.Content.Windows
     /// Логика взаимодействия для EnterTagTextWindow.xaml
     /// </summary>
     public partial class EnterTagTextWindow : Window
-    {
-        /// <summary>
-        /// Введённый текст тега
-        /// </summary>
-        public string TagText
-        {
-            get => TagNameTextBox.Text;
-            set => TagNameTextBox.Text = value;
-        }
+    {        
 
         /// <summary>
         /// Проверка наличия текста тега
@@ -62,5 +55,27 @@ namespace TegSetter.Content.Windows
         private void OkButton_Click(object sender, RoutedEventArgs e) =>
             //Успешно завершаем работу с окном
             this.DialogResult = true;
+
+
+        /// <summary>
+        /// Проставляем тег в контролл
+        /// </summary>
+        /// <param name="tag">Информация о теге</param>
+        public void SetTag(TagInfo tag)
+        {
+            //ПРоставляем значения в контролл
+            TagDescriptionTextBox.Text = tag.Description;
+            TagNameTextBox.Text = tag.Name;
+        }
+
+        /// <summary>
+        /// Получаем тег из контролла
+        /// </summary>
+        /// <returns>Класс тега</returns>
+        public TagInfo GetTag() =>
+            new TagInfo(
+                TagNameTextBox.Text, 
+                TagDescriptionTextBox.Text);
+
     }
 }

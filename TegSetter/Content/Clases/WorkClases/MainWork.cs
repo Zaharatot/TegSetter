@@ -46,7 +46,7 @@ namespace TegSetter.Content.Clases.WorkClases
         /// <summary>
         /// Текущий список тегов
         /// </summary>
-        private List<string> _tags;
+        private List<TagInfo> _tags;
 
         /// <summary>
         /// Конструктор класса
@@ -63,7 +63,7 @@ namespace TegSetter.Content.Clases.WorkClases
         {
             //Список изображений для работы
             _images = new List<ImageInfo>();
-            _tags = new List<string>();
+            _tags = new List<TagInfo>();
             //Инициализируем используемые классы
             _imageLoader = new ImageLoader();
             _tagsWork = new TagsWork();
@@ -87,7 +87,7 @@ namespace TegSetter.Content.Clases.WorkClases
         /// </summary>
         /// <param name="tags">Список тегов</param>
         /// <returns>Словарь пар клавиша -> тег</returns>
-        public Dictionary<Key, string> PairKeysToTags(List<string> tags) =>
+        public Dictionary<Key, TagInfo> PairKeysToTags(List<TagInfo> tags) =>
             _keyMapper.PairKeysToTags(tags);
 
         /// <summary>
@@ -118,14 +118,14 @@ namespace TegSetter.Content.Clases.WorkClases
         /// Добавляем теги в список
         /// </summary>
         /// <param name="tags">Список тегов для добавления</param>
-        public void AddTags(List<string> tags)
+        public void AddTags(List<TagInfo> tags)
         {
             //Прроходимся по добавляемым тегам
-            tags.ForEach(tag => {
+            tags.ForEach(newTag => {
                 //Если такого тега нет в списке
-                if (!_tags.Contains(tag))
+                if (!_tags.Any(tag => tag.IsEquals(newTag.Name)))
                     //Добавляем его
-                    _tags.Add(tag);
+                    _tags.Add(newTag);
             });
             //Сохраняем список тегов
             SaveTags();
@@ -134,13 +134,13 @@ namespace TegSetter.Content.Clases.WorkClases
         /// <summary>
         /// Добавляем тег в список
         /// </summary>
-        /// <param name="tag">Тег для добавления</param>
-        public void AddTag(string tag)
+        /// <param name="tagName">Тег для добавления</param>
+        public void AddTag(string tagName)
         {
             //Если такого тега нет в списке
-            if (!_tags.Contains(tag))
+            if (!_tags.Any(tag => tag.IsEquals(tagName)))
                 //Добавляем его
-                _tags.Add(tag);
+                _tags.Add(new TagInfo(tagName, ""));
             //Сохраняем список тегов
             SaveTags();
         }
@@ -148,11 +148,11 @@ namespace TegSetter.Content.Clases.WorkClases
         /// <summary>
         /// Удаляем тег из списка
         /// </summary>
-        /// <param name="tag">Тег для удаления</param>
-        public void DeleteTag(string tag)
+        /// <param name="tagName">Тег для удаления</param>
+        public void DeleteTag(string tagName)
         {
             //Удалеем тег из списка
-            _tags.Remove(tag);
+            _tags.RemoveAll(tag => tag.IsEquals(tagName));
             //Сохраняем список тегов
             SaveTags();
         }
@@ -161,7 +161,7 @@ namespace TegSetter.Content.Clases.WorkClases
         /// Проставляем обновлённый список тегов
         /// </summary>
         /// <param name="tags">Список тегов для простановки</param>
-        public void SetTags(List<string> tags)
+        public void SetTags(List<TagInfo> tags)
         {
             //Проставляем список тегов
             _tags = tags;
@@ -189,7 +189,7 @@ namespace TegSetter.Content.Clases.WorkClases
         /// Получаем список тегов
         /// </summary>
         /// <returns>Полный список тегов</returns>
-        public List<string> GetTags() => _tags;
+        public List<TagInfo> GetTags() => _tags;
 
         /// <summary>
         /// Получение изображения по идентификатору
@@ -203,23 +203,39 @@ namespace TegSetter.Content.Clases.WorkClases
         /// </summary>
         /// <param name="id">Идентификатор изображения</param>
         /// <param name="tag">Тег для добавления</param>
-        public void AddImageTag(int id, string tag)
+        public void AddImageTag(int id, TagInfo tag)
         {
             //Получаем картинку по идентификатору
             ImageInfo image = LoadImage(id);
             //Если у картинки ещё нет такого тега
-            if(!image.Tags.Contains(tag))
+            if(!image.Tags.Contains(tag.Name))
                 //Добавляем тег картинке
-                image.Tags.Add(tag);
+                image.Tags.Add(tag.Name);
         }
 
         /// <summary>
         /// Проставляем новый словарь тегов
         /// </summary>
         /// <param name="tags">Новый словарь тегов</param>
-        public void SetNewTagsDict(Dictionary<Key, string> tags) =>
+        public void SetNewTagsDict(Dictionary<Key, TagInfo> tags) =>
             //Вызываем внутренний метод
             _keyActionProcessor.SetNewTagsDict(tags);
+
+
+        /// <summary>
+        /// Получаем системные теги по именам
+        /// </summary>
+        /// <param name="tagNames">Список имён тегов</param>
+        /// <returns>Список тегов</returns>
+        public List<TagInfo> GetSystemTags(List<string> tagNames) =>
+            //Список имён тегов
+            tagNames
+                //Конвертируем в системные, путём поиска по имени целевых тегов
+                .ConvertAll(tagName => _tags.FirstOrDefault(tag => tag.IsEquals(tagName)))
+                //Выбираем только не пустые элементы
+                .Where(tag => tag != null)
+                //Возвращаем в виде списка
+                .ToList();
 
         /// <summary>
         /// Возврат количества изображений
