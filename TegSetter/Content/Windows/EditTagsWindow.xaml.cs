@@ -23,10 +23,6 @@ namespace TegSetter.Content.Windows
     public partial class EditTagsWindow : Window
     {      
 
-        /// <summary>
-        /// Флаг наличия изменений в списке тегов
-        /// </summary>
-        private bool _isChanged;
 
         /// <summary>
         /// Конструктор окна
@@ -42,8 +38,7 @@ namespace TegSetter.Content.Windows
         /// </summary>
         private void Init()
         {
-            //Проставляем дефолтные знечения
-            _isChanged = false;
+
         }
 
         /// <summary>
@@ -62,14 +57,12 @@ namespace TegSetter.Content.Windows
         /// </summary>
         private void DeleteTagButton_Click(object sender, RoutedEventArgs e)
         {
+            //Получаем выбранный тег
+            TagControl elem = GetSelectedTag();
             //Если есть выбранный тег
-            if (TagsListBox.SelectedItem != null)
-            {
+            if (elem != null)
                 //Удаляем его из списка
-                TagsListBox.Items.Remove(TagsListBox.SelectedItem);
-                //Указываем на изменение списка
-                _isChanged = true;
-            }
+                TagsPanel.Children.Remove(elem);
         }
 
         /// <summary>
@@ -83,12 +76,8 @@ namespace TegSetter.Content.Windows
             bool? result = enterTagTextWindow.ShowDialog();
             //Если окно успешно закрыто, и если был введён тег
             if (result.GetValueOrDefault(false) && enterTagTextWindow.IsContainTagName)
-            {
                 //Добавляем тег на контролл
-                TagsListBox.Items.Add(CreateTagControl(enterTagTextWindow.GetTag()));
-                //Указываем на изменение списка
-                _isChanged = true;
-            }
+                TagsPanel.Children.Add(CreateTagControl(enterTagTextWindow.GetTag()));
         }
 
         /// <summary>
@@ -104,17 +93,13 @@ namespace TegSetter.Content.Windows
                 //Инициализируем окно изменения тега
                 EnterTagTextWindow enterTagTextWindow = new EnterTagTextWindow();
                 //Проставляем текст тега в окно редактирования
-                enterTagTextWindow.SetTag(selected.GetTag());
+                enterTagTextWindow.SetTag(selected.TagValue);
                 //Вызываем окно добавления тега как диалоговое
                 bool? result = enterTagTextWindow.ShowDialog();
                 //Если окно успешно закрыто, и если был введён тег
                 if (result.GetValueOrDefault(false) && enterTagTextWindow.IsContainTagName)
-                {
                     //Обновляем текст тега в таблице
-                    selected.SetTag(enterTagTextWindow.GetTag());
-                    //Указываем на изменение списка
-                    _isChanged = true;
-                }
+                    selected.TagValue = enterTagTextWindow.GetTag();
             }
         }
 
@@ -124,13 +109,14 @@ namespace TegSetter.Content.Windows
         /// <returns>Контролл выбранного тега</returns>
         private TagControl GetSelectedTag()
         {
-            TagControl ex = null;
-            //Если есть выбранный тег
-            if(TagsListBox.SelectedItem != null)
-                //Возвращаем контролл выбранного тега
-                ex = (TagControl)TagsListBox.SelectedItem;
+            //Проходимся по тегам
+            foreach (TagControl elem in TagsPanel.Children)
+                //Если тэг выбран 
+                if (elem.IsSelected)
+                    //Возвращаем его
+                    return elem;
             //Возвращаем результат
-            return ex;
+            return null;
         }
 
         /// <summary>
@@ -143,14 +129,42 @@ namespace TegSetter.Content.Windows
             //Инициализируем контролл тега
             TagControl elem = new TagControl() {
                 IsRemoveButtonVisible = false,
-                TagLetter = null
+                IsAllowSelected = true,
+                IsTagLetterVisible = false,
+                TagValue = tag
             };
-            //Проставляем тег в контролл
-            elem.SetTag(tag);
+            //Добавляем обработчик события выбора тега
+            elem.SelectControl += Elem_SelectControl;
             //Возвращаем результат
             return elem;
         }
-            
+
+        /// <summary>
+        /// Обработчик события выбора тега
+        /// </summary>
+        /// <param name="tag">Контролл с выбранным тегом</param>
+        private void Elem_SelectControl(TagControl tag)
+        {
+            //Проходимся по тегам
+            foreach (TagControl elem in TagsPanel.Children)
+                //Сбрасываем им выделение
+                elem.IsSelected = false;
+            //Проставляем текущему тэгу выделение
+            tag.IsSelected = true;
+        }
+
+        /// <summary>
+        /// Удаляем все теги с панели
+        /// </summary>
+        private void RemoveTags()
+        {
+            //Проходимся по тегам
+            foreach (TagControl tag in TagsPanel.Children)
+                //Удаляем обработчик события выбора тега
+                tag.SelectControl -= Elem_SelectControl;
+            //Удаляем все теги с панели
+            TagsPanel.Children.Clear();
+        }
 
 
 
@@ -162,10 +176,10 @@ namespace TegSetter.Content.Windows
         {
             //Инициализируем выходной список
             List<TagInfo> ex = new List<TagInfo>();
-            //Проходимся по текстовым блокам
-            foreach (TagControl textBlock in TagsListBox.Items)
+            //Проходимся по тегам
+            foreach (TagControl tag in TagsPanel.Children)
                 //Добавляем текст из них в список
-                ex.Add(textBlock.GetTag());
+                ex.Add(tag.TagValue);
             //Возвращаем результат
             return ex;
         }
@@ -176,14 +190,12 @@ namespace TegSetter.Content.Windows
         /// <param name="tags">Список тегов для загрузки</param>
         public void SetTags(List<TagInfo> tags)
         {
-            //Удаляем все старые элементы из списка
-            TagsListBox.Items.Clear();
+            //Удаляем все теги с панели
+            RemoveTags();
             //Проходимся по тегам, отсортированным по имени
-            foreach (var tag in tags.OrderBy(tag => tag))
+            foreach (var tag in tags.OrderBy(tag => tag.Name))
                 //Добавляем теги на контролл
-                TagsListBox.Items.Add(CreateTagControl(tag));
-            //Указываем, что изменений нет
-            _isChanged = false;
+                TagsPanel.Children.Add(CreateTagControl(tag));
         }
     }
 }

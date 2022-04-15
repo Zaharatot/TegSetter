@@ -53,7 +53,7 @@ namespace TegSetter.Content.Controls.Tags
         private void Elem_DeleteTagRequest(TagControl tag)
         {
             //Вызываем месседжбокс с запросом удаления
-            MessageBoxResult result = MessageBox.Show($"Вы действительно хотите удалить тег '{tag.GetTag().Name}'?",
+            MessageBoxResult result = MessageBox.Show($"Вы действительно хотите удалить тег '{tag.TagValue.Name}'?",
                 "Запрос удаления", MessageBoxButton.YesNo);
             //Удаляем только при подтверждении
             if (result == MessageBoxResult.Yes)
@@ -69,17 +69,16 @@ namespace TegSetter.Content.Controls.Tags
         /// Инициализируем контролл тега
         /// </summary>
         /// <param name="tag">Тег для добавления контролла</param>
-        /// <param name="letter">Буква тега</param>
         /// <returns>Созданный контролл</returns>
-        private TagControl CreateTagControl(TagInfo tag, Key letter)
+        private TagControl CreateTagControl(TagInfo tag)
         {
             //Инициализируем контролл тега
             TagControl elem = new TagControl() {
                 IsRemoveButtonVisible = false,
-                TagLetter = letter
+                IsAllowSelected = false,
+                IsTagLetterVisible = true,
+                TagValue = tag,
             };
-            //Добавляем тег на контролл
-            elem.SetTag(tag);
             //Добавляем обработчик события запроса на удаление тега
             elem.DeleteTagRequest += Elem_DeleteTagRequest;
             //Возвращаем результат
@@ -111,19 +110,33 @@ namespace TegSetter.Content.Controls.Tags
 
 
 
+        /// <summary>
+        /// Получаем имена тегов
+        /// </summary>
+        /// <returns>Список имён тегов</returns>
+        public List<string> GetTagNames()
+        {
+            List<string> ex = new List<string>();
+            //Проходимся по тегам панели
+            foreach (TagControl elem in TagsListBox.Children)
+                //Добавляем имя тега в список
+                ex.Add(elem.TagValue.Name);
+            //Возвращаем результат
+            return ex;
+        }
 
         /// <summary>
         /// Проставляем новый список тегов
         /// </summary>
         /// <param name="tags">Список тегов для добавления</param>
-        public void SetTags(Dictionary<Key, TagInfo> tags)
+        public void SetTags(List<TagInfo> tags)
         {
             // Выполняем удаление всех тегов с панели
             RemoveTags();
             //Проходимся по строкам тегов, и добавляем только уникальные
-            foreach (KeyValuePair<Key, TagInfo> tag in tags)
+            foreach (TagInfo tag in tags)
                 //Генерируем контроллы тегов и добавляем на панель
-                TagsListBox.Children.Add(CreateTagControl(tag.Value, tag.Key));
+                TagsListBox.Children.Add(CreateTagControl(tag));
         }
 
     }

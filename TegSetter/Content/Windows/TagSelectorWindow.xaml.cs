@@ -37,6 +37,20 @@ namespace TegSetter.Content.Windows
             //Завершаем работу с окном
             this.DialogResult = true;
 
+        /// <summary>
+        /// Обработчик события нажатия на кнопку выбора всех строк
+        /// </summary>
+        private void SelectAllButton_Click(object sender, RoutedEventArgs e) =>
+            //Проставляем статус всем тегам
+            SetAllTagsSelectionState(true);
+
+        /// <summary>
+        /// Обработчик события нажатия на кнопку сброса всех строк
+        /// </summary>
+        private void UnSelectAllButton_Click(object sender, RoutedEventArgs e) =>
+            //Проставляем статус всем тегам
+            SetAllTagsSelectionState(false);
+
 
         /// <summary>
         /// Обработчик события нажатия кнопки в окне
@@ -52,22 +66,114 @@ namespace TegSetter.Content.Windows
                 this.DialogResult = false;
         }
 
+
+        /// <summary>
+        /// Метод простановки статуса выделения всем тегам
+        /// </summary>
+        /// <param name="state">Статус для простановки</param>
+        private void SetAllTagsSelectionState(bool state)
+        {
+            StackPanel panel;
+            //Проходимся по экспандерам
+            foreach (Expander expander in TagsPanel.Children)
+            {
+                //Получаем панель экспандера
+                panel = expander.Content as StackPanel;
+                //Проходимся по тегам в панели
+                foreach (TagControl tag in panel.Children)
+                    //Проставляем всем нужный статус
+                    tag.IsSelected = state;
+            }
+        }
+
         /// <summary>
         /// Создаём контролл чекбокса для тега
         /// </summary>
         /// <param name="tag">Инфомрация о теге</param>
         /// <returns>Контролл чекбокса</returns>
-        private CheckBox CreateCheckBox(TagInfo tag)
+        private TagControl CreateTagControl(TagInfo tag)
         {
             //Инициализируем контролл тега
             TagControl elem = new TagControl() {
                 IsRemoveButtonVisible = false,
-                TagLetter = null
+                IsAllowSelected = true,
+                IsTagLetterVisible = false,
+                TagValue = tag,
             };
-            //Проставляем тег в контролл
-            elem.SetTag(tag);
-            //СОздаём чекбокс с контентом в виде контролла тега
-            return new CheckBox() { Content = elem };
+            //Добавляем обработчик события выбора тега
+            elem.SelectControl += Elem_SelectControl;
+            //Возвращаем результат
+            return elem;
+        }
+
+
+        /// <summary>
+        /// Обработчик события выбора тега
+        /// </summary>
+        /// <param name="tag">Контролл с выбранным тегом</param>
+        private void Elem_SelectControl(TagControl tag) =>
+            //Инвертируем5 текущему тэгу выделение
+            tag.IsSelected = !tag.IsSelected;
+
+        /// <summary>
+        /// Удаляем все теги с панели
+        /// </summary>
+        private void RemoveTags()
+        {
+            StackPanel panel;
+            //Проходимся по экспандерам
+            foreach (Expander expander in TagsPanel.Children)
+            {
+                //Получаем панель экспандера
+                panel = expander.Content as StackPanel;
+                //Проходимся по тегам в панели
+                foreach(TagControl tag in panel.Children)
+                    //Удаляем обработчик события выбора тега
+                    tag.SelectControl -= Elem_SelectControl;            
+            }
+            //Удаляем все группы с панели
+            TagsPanel.Children.Clear();
+        }
+
+        /// <summary>
+        /// Получаем группы тегов, отсортирвоанные по именам
+        /// </summary>
+        /// <param name="tags">Список тегов для разделения</param>
+        /// <returns>Список групп тегов</returns>
+        private List<IGrouping<string, TagInfo>> GetTagGroups(List<TagInfo> tags) =>
+             tags.GroupBy(tag => tag.Group).OrderBy(group => group.Key).ToList();
+
+        /// <summary>
+        /// Метод получения заголовка для группы тегов
+        /// </summary>
+        /// <param name="group">Содержимое группы тегов</param>
+        /// <returns>Заголовок группы</returns>
+        private string GetGroupHeader(IGrouping<string, TagInfo> group) =>
+            string.IsNullOrEmpty(group.Key) ? "Не распределённые теги" : group.Key;
+
+        /// <summary>
+        /// Создаём контролл группы тегов
+        /// </summary>
+        /// <param name="group">Содержимое группы тегов</param>
+        /// <returns>Контролл группы тегов</returns>
+        private Expander CreateTagGroup(IGrouping<string, TagInfo> group)
+        {
+            //Возвращаем экспандер
+            Expander elem = new Expander();
+            //Инициализируем панель для тегов
+            StackPanel panel = new StackPanel();
+            //Получаем заголовок группы
+            elem.Header = GetGroupHeader(group);
+            //Проставляем панель в экспандер
+            elem.Content = panel;
+            //Разворачиваем панель с неотгруппированными тэгами
+            elem.IsExpanded = string.IsNullOrEmpty(group.Key);
+            //Проходимся по группе, отсортированной по имени
+            foreach (TagInfo tag in group.OrderBy(tag => tag.Name))
+                //Добавляем теги на панель
+                panel.Children.Add(CreateTagControl(tag));
+            //ВОзвращаем контролл
+            return elem;
         }
 
 
@@ -77,12 +183,33 @@ namespace TegSetter.Content.Windows
         /// <param name="tags">Список тегов для добавления</param>
         public void SetTagsToList(List<TagInfo> tags)
         {
-            //Удаляем все старые элементы из списка
-            TagsListBox.Items.Clear();
-            //Проходимся по тегам
-            foreach (var tag in tags.OrderBy(tag => tag.Name))
-                //Добавляем теги на контролл, в виде чекбоксов
-                TagsListBox.Items.Add(CreateCheckBox(tag));
+            //Удаляем все теги с панели
+            RemoveTags();
+            //Получаем группы тегов
+            List<IGrouping<string, TagInfo>> groups = GetTagGroups(tags);
+            //Проходимся по группам
+            foreach (IGrouping<string, TagInfo> group in groups)
+                //Добавляем группы на контролл
+                TagsPanel.Children.Add(CreateTagGroup(group));
+        }
+
+        /// <summary>
+        /// Проставляем выбранные теги
+        /// </summary>
+        /// <param name="tags">Список имён выбранных тегов</param>
+        public void SetSelectedTags(List<string> tags)
+        {
+            StackPanel panel;
+            //Проходимся по экспандерам
+            foreach (Expander expander in TagsPanel.Children)
+            {
+                //Получаем панель экспандера
+                panel = expander.Content as StackPanel;
+                //Проходимся по тегам в панели
+                foreach (TagControl tag in panel.Children)
+                    //Если имя тега есть в списке - выделяем тег
+                    tag.IsSelected = tags.Contains(tag.TagValue.Name);
+            }
         }
 
         /// <summary>
@@ -91,21 +218,24 @@ namespace TegSetter.Content.Windows
         /// <returns>Список выбранных тегов</returns>
         public List<TagInfo> GetSelectedTags()
         {
-            TagControl elem;
+            StackPanel panel;
             //Инициализируем выходной список
             List<TagInfo> ex = new List<TagInfo>();
-            //Проходимся по чекбоксам
-            foreach (CheckBox checkBox in TagsListBox.Items)
-                //Если тег выбран
-                if (checkBox.IsChecked.GetValueOrDefault(false))
-                {
-                    //Получаем контролл тега
-                    elem = (TagControl)checkBox.Content;
-                    //Добавляем его в список
-                    ex.Add(elem.GetTag());
-                }
+            //Проходимся по экспандерам
+            foreach (Expander expander in TagsPanel.Children)
+            {
+                //Получаем панель экспандера
+                panel = expander.Content as StackPanel;
+                //Проходимся по тегам в панели
+                foreach (TagControl tag in panel.Children)
+                    //Если тег выбран
+                    if (tag.IsSelected)
+                        //Добавляем его в список
+                        ex.Add(tag.TagValue);
+            }      
             //Возвращаем результат
             return ex;
         }
+
     }
 }

@@ -118,12 +118,16 @@ namespace TegSetter.Content.Windows
         {
             //Загруждаем картинку по идентификатору
             ImageInfo image = _mainWork.LoadImage(currentId);
-            //ПОлучаем теги по именам из картинки
-            List<TagInfo> tags = _mainWork.GetSystemTags(image.Tags);
-            //Проставляем теги картинки в контролл
-            ImageTagsControl.SetTags(tags);
-            //ЗАгружаем саму карртинку
-            ImageControl.LoadImage(image.Path);
+            //Если картинка найдена
+            if (image != null)
+            {
+                //ПОлучаем теги по именам из картинки
+                List<TagInfo> tags = _mainWork.GetSystemTags(image.Tags);
+                //Проставляем теги картинки в контролл
+                ImageTagsControl.SetTags(tags);
+                //ЗАгружаем саму карртинку
+                ImageControl.LoadImage(image.Path);
+            }
         }
 
         /// <summary>
@@ -135,6 +139,8 @@ namespace TegSetter.Content.Windows
             TagSelectorWindow tagSelectorWindow = new TagSelectorWindow();
             //Загружаем в окно полный список тегов
             tagSelectorWindow.SetTagsToList(_mainWork.GetTags());
+            //Проставляем в окно выбранные теги
+            tagSelectorWindow.SetSelectedTags(TagsListControl.GetTagNames());
             //Отображаем окно как диалоговое
             bool? result = tagSelectorWindow.ShowDialog();
             //Если окно закрылось с успехом
@@ -143,11 +149,11 @@ namespace TegSetter.Content.Windows
                 //Получаем выбранные теги
                 List<TagInfo> tags = tagSelectorWindow.GetSelectedTags();
                 //Пейрим теги отсротирвоанные по имени к кнопкам
-                Dictionary<Key, TagInfo> tagsDict = _mainWork.PairKeysToTags(tags);
+                _mainWork.PairKeysToTags(ref tags);
                 //ПРоставляем в панель словарь тегов
-                TagsListControl.SetTags(tagsDict);
+                TagsListControl.SetTags(tags);
                 //Проставляем словарь тегов для обработки нажатий
-                _mainWork.SetNewTagsDict(tagsDict);
+                _mainWork.SetNewTagsDict(tags);
             }
         }
 

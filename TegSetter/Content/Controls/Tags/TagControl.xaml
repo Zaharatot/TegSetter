@@ -7,23 +7,26 @@
              mc:Ignorable="d" 
              Height="50" d:DesignWidth="180">
     <!-- Рамка для тега -->
-    <Border Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5">
+    <Border x:Name="BackgroundBorder" Background="White" BorderBrush="Black" 
+            BorderThickness="1" CornerRadius="5" Margin="5" MouseDown="BackgroundBorder_MouseDown">
         <Border.ToolTip>
             <TextBlock x:Name="ToolTipTextBlock" />
         </Border.ToolTip>
         <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
-                <ColumnDefinition x:Name="RemoveButtonColumn" Width="40" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <!-- Блок с буквой тега -->
+            <TextBlock x:Name="TagLetterTextBlock" Text="[ Z ]" Foreground="Green" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15"
+                       MaxWidth="300" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"  Margin="5" />
             <!-- Блок с именем тега -->
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15"
-                       MaxWidth="300" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"  Margin="5" >
-                <Run x:Name="TagLetterRun" Text="[ Z ]" Foreground="Green" />
-                <Run x:Name="TagNameRun" Text="Имя тега" />
-            </TextBlock>
+            <TextBlock x:Name="TagNameTextBlock" Text="Имя тега" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="15"
+                       MaxWidth="300" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"  Margin="5" />
+
             <!-- Кнопка удаления тега -->
-            <Button x:Name="RemoveTagButton" Content="X" Margin="5" Grid.Column="1" Click="RemoveTagButton_Click" 
+            <Button x:Name="RemoveTagButton" Content="X" Margin="5" Width="25" Grid.Column="2" Click="RemoveTagButton_Click" 
                     Background="Transparent" Foreground="Red" BorderBrush="Red" Padding="0,0,0,0"/>
         </Grid>
     </Border>

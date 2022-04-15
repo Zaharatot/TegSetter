@@ -66,6 +66,7 @@ namespace TegSetter.Content.Windows
             //ПРоставляем значения в контролл
             TagDescriptionTextBox.Text = tag.Description;
             TagNameTextBox.Text = tag.Name;
+            TagGroupTextBox.Text = tag.Group;
         }
 
         /// <summary>
@@ -73,9 +74,11 @@ namespace TegSetter.Content.Windows
         /// </summary>
         /// <returns>Класс тега</returns>
         public TagInfo GetTag() =>
-            new TagInfo(
-                TagNameTextBox.Text, 
-                TagDescriptionTextBox.Text);
+            new TagInfo() {
+                Name = TagNameTextBox.Text,
+                Description = TagDescriptionTextBox.Text,
+                Group = TagGroupTextBox.Text
+            };
 
     }
 }

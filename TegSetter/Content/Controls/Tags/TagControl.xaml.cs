@@ -32,26 +32,71 @@ namespace TegSetter.Content.Controls.Tags
         public event DeleteTagRequestEventHandler DeleteTagRequest;
 
         /// <summary>
+        /// Делегат события выделения контролла
+        /// </summary>
+        /// <param name="tag">Выделенный контролл</param>
+        public delegate void SelectControlEventHandler(TagControl tag);
+        /// <summary>
+        /// Cобытие выделения контролла
+        /// </summary>
+        public event SelectControlEventHandler SelectControl;
+
+
+        /// <summary>
         /// Флаг отображения кнопки удаления тега
         /// </summary>
         public bool IsRemoveButtonVisible
         {
-            get => (RemoveButtonColumn.Width.Value == 40);
-            set => RemoveButtonColumn.Width = (value) ? new GridLength(40) : new GridLength(0);
+            get => RemoveTagButton.Visibility == Visibility.Visible;
+            set => RemoveTagButton.Visibility =
+                (value) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         /// <summary>
-        /// Буква тега
+        /// Флаг отображения буквы тега
         /// </summary>
-        public Key? TagLetter
+        public bool IsTagLetterVisible
         {
-            set => TagLetterRun.Text = (value.HasValue) ? $"[ {value.Value.ToString()} ]" : "";
+            get => TagLetterTextBlock.Visibility == Visibility.Visible;
+            set => TagLetterTextBlock.Visibility =
+                (value) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         /// <summary>
         /// Класс информации о теге
         /// </summary>
-        public TagInfo _tag;
+        public TagInfo TagValue
+        {
+            get => _tag;
+            set => SetTag(value);
+        }
+
+        /// <summary>
+        /// Флаг выбора элемента
+        /// </summary>
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => UpdateSelection(value);
+        }
+
+
+        /// <summary>
+        /// Флаг, разрешающий выбор элементов
+        /// </summary>
+        public bool IsAllowSelected { get; set; }
+
+       
+
+        /// <summary>
+        /// Класс информации о теге
+        /// </summary>
+        private TagInfo _tag;
+        /// <summary>
+        /// Флаг выбора элемента
+        /// </summary>
+        public bool _isSelected;
+
 
         /// <summary>
         /// Конструктор 
@@ -68,8 +113,17 @@ namespace TegSetter.Content.Controls.Tags
         private void Init()
         {
             //Проставляем дефолтные значения
-            _tag = null;
+            _tag = new TagInfo();
+            _isSelected = false;
+            IsAllowSelected = false;
         }
+
+        /// <summary>
+        /// Обработчик события клика по контроллу
+        /// </summary>
+        private void BackgroundBorder_MouseDown(object sender, MouseButtonEventArgs e) =>
+            //Вызываем ивент выделения тега
+            SelectControl?.Invoke(this);
 
         /// <summary>
         /// Обработчик события нажатия на кнопку запроса удаления тега
@@ -83,19 +137,32 @@ namespace TegSetter.Content.Controls.Tags
         /// Проставляем в контролл информацию о теге
         /// </summary>
         /// <param name="tag">Информация о теге</param>
-        public void SetTag(TagInfo tag)
+        private void SetTag(TagInfo tag)
         {
             //Проставляем переданные значения
             _tag = tag;
             //Проставляем имя тега и описание
-            TagNameRun.Text = tag.Name;
+            TagNameTextBlock.Text = tag.Name;
             ToolTipTextBlock.Text = tag.Description;
+            TagLetterTextBlock.Text = (tag.Letter.HasValue) ? $"[ {tag.Letter.Value} ]" : "";
         }
 
         /// <summary>
-        /// Метод получения содержимого тега
+        /// ВЫполняем обновление выделения
         /// </summary>
-        /// <returns>Класс тега</returns>
-        public TagInfo GetTag() => _tag;
+        /// <param name="isSelected">Флаг выделения</param>
+        private void UpdateSelection(bool isSelected)
+        {
+            //Если выделение разрешено
+            if (IsAllowSelected)
+            {
+                //Проставляем переданное значение
+                _isSelected = isSelected;
+                //Обновляем цвет фона контролла
+                BackgroundBorder.Background = (isSelected)
+                    ? Brushes.LightBlue : Brushes.White;
+            }
+        }
+
     }
 }

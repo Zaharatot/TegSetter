@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Xml.Serialization;
 
 namespace TegSetter.Content.Clases.DataClases.Info
 {
@@ -19,6 +21,15 @@ namespace TegSetter.Content.Clases.DataClases.Info
         /// Описание тега
         /// </summary>
         public string Description { get; set; }
+        /// <summary>
+        /// Имя группы в которой состоит тег
+        /// </summary>
+        public string Group { get; set; }
+        /// <summary>
+        /// Буква тега
+        /// </summary>
+        [XmlIgnore]
+        public Key? Letter { get; set; }
 
         /// <summary>
         /// Конструктор класса
@@ -26,7 +37,8 @@ namespace TegSetter.Content.Clases.DataClases.Info
         public TagInfo()
         {
             //Проставляем дефолтные значения
-            Name = Description = "";
+            Name = Description = Group = "";
+            Letter = null;
         }
 
 
@@ -40,6 +52,7 @@ namespace TegSetter.Content.Clases.DataClases.Info
             //Проставляем переданные значения
             Name = name;
             Description = description;
+            Letter = null;
         }
 
         /// <summary>

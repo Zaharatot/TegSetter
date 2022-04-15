@@ -86,9 +86,8 @@ namespace TegSetter.Content.Clases.WorkClases
         /// Формируем ключ-пары из тегов и клавишь
         /// </summary>
         /// <param name="tags">Список тегов</param>
-        /// <returns>Словарь пар клавиша -> тег</returns>
-        public Dictionary<Key, TagInfo> PairKeysToTags(List<TagInfo> tags) =>
-            _keyMapper.PairKeysToTags(tags);
+        public void PairKeysToTags(ref List<TagInfo> tags) =>
+            _keyMapper.PairKeysToTags(ref tags);
 
         /// <summary>
         /// Выполняем загрузку списка тегов
@@ -196,7 +195,15 @@ namespace TegSetter.Content.Clases.WorkClases
         /// </summary>
         /// <param name="id">Идентификатор изображения</param>
         /// <returns>Класс информации об изображении</returns>
-        public ImageInfo LoadImage(int id) => _images[id];
+        public ImageInfo LoadImage(int id)
+        {
+            //Если id не в рамках допустимого
+            if ((id < 0) || (id >= _images.Count))
+                //Возвращаем Null
+                return null;
+            //Если всё ок - возвращаем картинку
+            return _images[id];
+        }
 
         /// <summary>
         /// Добавляем тег картинке
@@ -207,8 +214,8 @@ namespace TegSetter.Content.Clases.WorkClases
         {
             //Получаем картинку по идентификатору
             ImageInfo image = LoadImage(id);
-            //Если у картинки ещё нет такого тега
-            if(!image.Tags.Contains(tag.Name))
+            //Если картинка найдена и у картинки ещё нет такого тега
+            if((image != null) && !image.Tags.Contains(tag.Name))
                 //Добавляем тег картинке
                 image.Tags.Add(tag.Name);
         }
@@ -217,7 +224,7 @@ namespace TegSetter.Content.Clases.WorkClases
         /// Проставляем новый словарь тегов
         /// </summary>
         /// <param name="tags">Новый словарь тегов</param>
-        public void SetNewTagsDict(Dictionary<Key, TagInfo> tags) =>
+        public void SetNewTagsDict(List<TagInfo> tags) =>
             //Вызываем внутренний метод
             _keyActionProcessor.SetNewTagsDict(tags);
 

@@ -67,7 +67,7 @@ namespace TegSetter.Content.Clases.WorkClases.Loaders
                     ex = (TagsWrapper)_serializer.Deserialize(ms);
             }
             //Возвращаем результат, отсортированный по имени
-            return ex.Tags.OrderBy(tag => tag).ToList();
+            return ex.Tags.OrderBy(tag => tag.Name).ToList();
         }
 
         /// <summary>

@@ -37,7 +37,7 @@ namespace TegSetter.Content.Controls.Tags
         private void Elem_DeleteTagRequest(TagControl tag)
         {
             //Вызываем месседжбокс с запросом удаления
-            MessageBoxResult result = MessageBox.Show($"Вы действительно хотите удалить тег '{tag.GetTag().Name}'?", 
+            MessageBoxResult result = MessageBox.Show($"Вы действительно хотите удалить тег '{tag.TagValue.Name}'?", 
                 "Запрос удаления", MessageBoxButton.YesNo);
             //Удаляем только при подтверждении
             if (result == MessageBoxResult.Yes)
@@ -59,10 +59,10 @@ namespace TegSetter.Content.Controls.Tags
             //Инициализируем контролл тега
             TagControl elem = new TagControl() { 
                 IsRemoveButtonVisible = true,
-                TagLetter = null
+                IsAllowSelected = false,
+                IsTagLetterVisible = false,
+                TagValue = tag,
             };
-            //Проставляем тег в контролл
-            elem.SetTag(tag);
             //Добавляем обработчик события запроса на удаление тега
             elem.DeleteTagRequest += Elem_DeleteTagRequest;
             //Возвращаем результат
@@ -130,7 +130,7 @@ namespace TegSetter.Content.Controls.Tags
             //Проходимся по тегам панели
             foreach (TagControl elem in TagsPanel.Children)
                 //Добавляем имя тега в список
-                ex.Add(elem.GetTag());
+                ex.Add(elem.TagValue);
             //Возвращаем результат, при этом - добавляя только уникальные теги
             return ex.Distinct().ToList();
         }

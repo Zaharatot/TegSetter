@@ -21,7 +21,7 @@ namespace TegSetter.Content.Clases.WorkClases.Keyboard
         /// <summary>
         /// Словарь тегов связанный с клавишами
         /// </summary>
-        private Dictionary<Key, TagInfo> _tags;
+        private List<TagInfo> _tags;
 
         /// <summary>
         /// Конструктор класса
@@ -37,7 +37,7 @@ namespace TegSetter.Content.Clases.WorkClases.Keyboard
         private void Init()
         {
             //Инициализируем дефолтные значения
-            _tags = new Dictionary<Key, TagInfo>();
+            _tags = new List<TagInfo>();
             //Инициализируем используемые классы
             _notActionKeyCheck = new HotKeyCheck();
         }
@@ -75,13 +75,19 @@ namespace TegSetter.Content.Clases.WorkClases.Keyboard
                 //Вызываем ивент перехода вперёд
                 GlobalEvents.InvokeGoToNextPageRequest();
             //Если кнопка связана с тегом
-            else if (_tags.ContainsKey(key))
-                //Вызываем ивент добавления тега
-                GlobalEvents.InvokeAddTagRequest(_tags[key]);
-            //Во всех остальных случаях
             else
-                //Нажатие не было обработано
-                ex = false;
+            {
+                //ПОлучаем тег по кнопке
+                TagInfo tag = _tags.FirstOrDefault(tg => tg.Letter == key);
+                //Если тега с такой кнопкой нет
+                if (tag == null)
+                    //Нажатие не было обработано
+                    ex = false;
+                //Если тег с такой кнопкой есть
+                else
+                    //Вызываем ивент добавления тега
+                    GlobalEvents.InvokeAddTagRequest(tag);
+            }
             //Возвращаемс результат
             return ex;
         }
@@ -113,7 +119,7 @@ namespace TegSetter.Content.Clases.WorkClases.Keyboard
         /// Проставляем новый словарь тегов
         /// </summary>
         /// <param name="tags">Новый словарь тегов</param>
-        public void SetNewTagsDict(Dictionary<Key, TagInfo> tags) =>
+        public void SetNewTagsDict(List<TagInfo> tags) =>
             _tags = tags;
     }
 }

@@ -71,21 +71,16 @@ namespace TegSetter.Content.Clases.WorkClases.Keyboard
         /// Формируем ключ-пары из тегов и клавишь
         /// </summary>
         /// <param name="tags">Список тегов</param>
-        /// <returns>Словарь пар клавиша -> тег</returns>
-        public Dictionary<Key, TagInfo> PairKeysToTags(List<TagInfo> tags)
+        public void PairKeysToTags(ref List<TagInfo> tags)
         {
-            //Инициализируем список клавишь
-            Dictionary<Key, TagInfo> ex = new Dictionary<Key, TagInfo>();
             //Лимитируем максимум для цикла
             int max = Math.Min(_validKeys.Count, tags.Count);
             //Сортируем теги по имени
-            tags = tags.OrderBy(tag => tag).ToList();
+            tags = tags.OrderBy(tag => tag.Name).ToList();
             //Проходимся в цикле по всем элементам
             for (int i = 0; i < max; i++)
-                //Добавлем в словарь пары из клавиши и тега
-                ex.Add(_validKeys[i], tags[i]);
-            //Возвращаем результат
-            return ex;
+                //Присваивает тегу клавишу
+                tags[i].Letter = _validKeys[i];
         }
     }
 }
