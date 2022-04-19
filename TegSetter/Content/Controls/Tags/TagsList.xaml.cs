@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TegSetter.Content.Clases.DataClases.Info;
+using TegSetter.Content.Clases.DataClases.Info.Tag;
 
 namespace TegSetter.Content.Controls.Tags
 {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Serialization;
 
-namespace TegSetter.Content.Clases.DataClases.Info
+namespace TegSetter.Content.Clases.DataClases.Info.Tag
 {
     /// <summary>
     /// Класс информации о теге

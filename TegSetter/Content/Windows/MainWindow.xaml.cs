@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TegSetter.Content.Clases.DataClases.Global;
 using TegSetter.Content.Clases.DataClases.Info;
+using TegSetter.Content.Clases.DataClases.Info.Tag;
 using TegSetter.Content.Clases.WorkClases;
 using TegSetter.Content.Clases.WorkClases.Keyboard;
 
@@ -138,7 +139,7 @@ namespace TegSetter.Content.Windows
             //Инициализируем окно выбора тегов
             TagSelectorWindow tagSelectorWindow = new TagSelectorWindow();
             //Загружаем в окно полный список тегов
-            tagSelectorWindow.SetTagsToList(_mainWork.GetTags());
+            tagSelectorWindow.SetTagsToList(_mainWork.GetTagsCollection());
             //Проставляем в окно выбранные теги
             tagSelectorWindow.SetSelectedTags(TagsListControl.GetTagNames());
             //Отображаем окно как диалоговое
@@ -210,11 +211,11 @@ namespace TegSetter.Content.Windows
             //Инициализируем окно редактирования списка тегов
             EditTagsWindow editTagsWindow = new EditTagsWindow();
             //Проставляем текущий список тегов в окно
-            editTagsWindow.SetTags(_mainWork.GetTags());
+            editTagsWindow.SetTags(_mainWork.GetTagsCollection());
             //Отображаем окно тегов как диалоговое
             editTagsWindow.ShowDialog();
             //Сохраняем измененённый список тегов
-            _mainWork.SetTags(editTagsWindow.GetTags());
+            _mainWork.SetTags(editTagsWindow.GetTagsCollection());
         }
 
         /// <summary>
@@ -231,8 +232,10 @@ namespace TegSetter.Content.Windows
                 TagSelectorWindow tagSelectorWindow = new TagSelectorWindow();
                 //КОнвертируем теги
                 List<TagInfo> tags = newTags.ConvertAll(tag => new TagInfo(tag, ""));
+                //Инициализируем коллекцию с группой имеющей соответствующее название
+                TagsCollection collection = new TagsCollection(tags, "Теги для добавления");
                 //Загружаем в окно список тегов для добавления
-                tagSelectorWindow.SetTagsToList(tags);
+                tagSelectorWindow.SetTagsToList(collection);
                 //Отображаем окно как диалоговое
                 bool? result = tagSelectorWindow.ShowDialog();
                 //Если окно закрылось с успехом

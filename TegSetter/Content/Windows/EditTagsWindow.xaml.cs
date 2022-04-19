@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TegSetter.Content.Clases.DataClases.Info;
+using TegSetter.Content.Clases.DataClases.Info.Tag;
 using TegSetter.Content.Controls.Tags;
 
 namespace TegSetter.Content.Windows
@@ -109,77 +110,51 @@ namespace TegSetter.Content.Windows
         /// <returns>Контролл выбранного тега</returns>
         private TagControl GetSelectedTag()
         {
-            //Проходимся по тегам
-            foreach (TagControl elem in TagsPanel.Children)
-                //Если тэг выбран 
-                if (elem.IsSelected)
-                    //Возвращаем его
-                    return elem;
+            TagControl ex = null;
+            //Проходимся по контроллам групп
+            foreach (TagsGroup group in TagsPanel.Children)
+            {
+                //Получаем выбранный контролл тега
+                ex = group.GetSelectedTagControl();
+                //Если такой найден
+                if (ex != null)
+                    //Выходим из цикла
+                    break;
+            }
             //Возвращаем результат
-            return null;
-        }
+            return ex;
+        }       
 
         /// <summary>
-        /// Формируем контролл текстового блока
+        /// Создаём контролл группы тегов
         /// </summary>
-        /// <param name="tag">Текст тега для блока</param>
-        /// <returns>Созданный контролл текстового блока</returns>
-        private TagControl CreateTagControl(TagInfo tag)
+        /// <param name="group">Содержимое группы тегов</param>
+        /// <returns>Контролл группы тегов</returns>
+        private TagsGroup CreateTagGroup(TagGroup group)
         {
-            //Инициализируем контролл тега
-            TagControl elem = new TagControl() {
-                IsRemoveButtonVisible = false,
-                IsAllowSelected = true,
-                IsTagLetterVisible = false,
-                TagValue = tag
-            };
-            //Добавляем обработчик события выбора тега
-            elem.SelectControl += Elem_SelectControl;
+            //Инициализируем контролл группы тегов
+            TagsGroup elem = new TagsGroup();
+            //Вставляем группу в контролл
+            elem.SetGroup(group);
             //Возвращаем результат
             return elem;
         }
 
-        /// <summary>
-        /// Обработчик события выбора тега
-        /// </summary>
-        /// <param name="tag">Контролл с выбранным тегом</param>
-        private void Elem_SelectControl(TagControl tag)
-        {
-            //Проходимся по тегам
-            foreach (TagControl elem in TagsPanel.Children)
-                //Сбрасываем им выделение
-                elem.IsSelected = false;
-            //Проставляем текущему тэгу выделение
-            tag.IsSelected = true;
-        }
-
-        /// <summary>
-        /// Удаляем все теги с панели
-        /// </summary>
-        private void RemoveTags()
-        {
-            //Проходимся по тегам
-            foreach (TagControl tag in TagsPanel.Children)
-                //Удаляем обработчик события выбора тега
-                tag.SelectControl -= Elem_SelectControl;
-            //Удаляем все теги с панели
-            TagsPanel.Children.Clear();
-        }
 
 
 
         /// <summary>
         /// Выполняем получение списка тегов
         /// </summary>
-        /// <returns>Список тегшов для получения</returns>
-        public List<TagInfo> GetTags()
+        /// <returns>Коллекция тегшов для получения</returns>
+        public TagsCollection GetTagsCollection()
         {
-            //Инициализируем выходной список
-            List<TagInfo> ex = new List<TagInfo>();
-            //Проходимся по тегам
-            foreach (TagControl tag in TagsPanel.Children)
-                //Добавляем текст из них в список
-                ex.Add(tag.TagValue);
+            //Инициализируем выходную коллекцию тегов
+            TagsCollection ex = new TagsCollection();
+            //Проходимся по контроллам групп
+            foreach (TagsGroup group in TagsPanel.Children)
+                //Добавляем группу с него в коллекцию
+                ex.Groups.Add(group.GetGroup());
             //Возвращаем результат
             return ex;
         }
@@ -187,15 +162,15 @@ namespace TegSetter.Content.Windows
         /// <summary>
         /// Выполняем загрузку списка тегов
         /// </summary>
-        /// <param name="tags">Список тегов для загрузки</param>
-        public void SetTags(List<TagInfo> tags)
+        /// <param name="tags">Коллекция тегов для загрузки</param>
+        public void SetTags(TagsCollection tags)
         {
-            //Удаляем все теги с панели
-            RemoveTags();
-            //Проходимся по тегам, отсортированным по имени
-            foreach (var tag in tags.OrderBy(tag => tag.Name))
-                //Добавляем теги на контролл
-                TagsPanel.Children.Add(CreateTagControl(tag));
+            //Удаляем все группы с панели
+            TagsPanel.Children.Clear();
+            //Проходимся по группам
+            foreach (TagGroup group in tags.Groups)
+                //Добавляем группы на контролл
+                TagsPanel.Children.Add(CreateTagGroup(group));
         }
     }
 }

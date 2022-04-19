@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using TegSetter.Content.Clases.DataClases.Global;
 using TegSetter.Content.Clases.DataClases.Info;
+using TegSetter.Content.Clases.DataClases.Info.Tag;
 
 namespace TegSetter.Content.Clases.WorkClases.Keyboard
 {

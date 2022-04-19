@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using TegSetter.Content.Clases.DataClases.Info;
+using TegSetter.Content.Clases.DataClases.Info.Tag;
 
 namespace TegSetter.Content.Clases.WorkClases.Loaders
 {
@@ -39,7 +40,7 @@ namespace TegSetter.Content.Clases.WorkClases.Loaders
         {
             //Проставляем дефолтные значения
             _tagsPath = CompilePath();
-            _serializer = new XmlSerializer(typeof(TagsWrapper));
+            _serializer = new XmlSerializer(typeof(TagsCollection));
         }
 
         /// <summary>
@@ -53,34 +54,34 @@ namespace TegSetter.Content.Clases.WorkClases.Loaders
         /// <summary>
         /// Выполняем загрузку списка тегов
         /// </summary>
-        /// <returns>Список тегов</returns>
-        public List<TagInfo> LoadTags()
+        /// <returns>Коллекция тегов</returns>
+        public TagsCollection LoadTags()
         {
-            //Инициализируем класс-обёртку
-            TagsWrapper ex = new TagsWrapper();
+            //Инициализируем 
+            TagsCollection ex = new TagsCollection();
             //Если файл существует
             if (File.Exists(_tagsPath))
             {
                 //Инициаализируем поток в памяти
                 using (FileStream ms = File.OpenRead(_tagsPath))
                     //Десериализуем xml в объект
-                    ex = (TagsWrapper)_serializer.Deserialize(ms);
+                    ex = (TagsCollection)_serializer.Deserialize(ms);
             }
-            //Возвращаем результат, отсортированный по имени
-            return ex.Tags.OrderBy(tag => tag.Name).ToList();
+            //Возвращаем результат
+            return ex;
         }
 
         /// <summary>
         /// Выполняем сохранение списка тегов
         /// </summary>
-        /// <param name="tags">Список тегов для сохранения</param>
-        public void SaveTags(List<TagInfo> tags)
+        /// <param name="tags">Коллекция тегов для сохранения</param>
+        public void SaveTags(TagsCollection tags)
         {
             //Инициаализируем поток в памяти
             using (MemoryStream ms = new MemoryStream())
             {
                 //Сериализуем класс в xml
-                _serializer.Serialize(ms, new TagsWrapper(tags));
+                _serializer.Serialize(ms, tags);
                 //Сохраняем байты в файл
                 File.WriteAllBytes(_tagsPath, ms.ToArray());
             }

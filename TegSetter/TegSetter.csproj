@@ -68,6 +68,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Content\Controls\Tags\TagsGroup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Content\Controls\Tags\TagsList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -95,8 +99,9 @@
     <Compile Include="Content\Clases\DataClases\Global\GlobalEvents.cs" />
     <Compile Include="Content\Clases\DataClases\Info\ImageInfo.cs" />
     <Compile Include="Content\Clases\DataClases\Info\LoadInfo.cs" />
-    <Compile Include="Content\Clases\DataClases\Info\TagInfo.cs" />
-    <Compile Include="Content\Clases\DataClases\Info\TagsWrapper.cs" />
+    <Compile Include="Content\Clases\DataClases\Info\Tag\TagGroup.cs" />
+    <Compile Include="Content\Clases\DataClases\Info\Tag\TagInfo.cs" />
+    <Compile Include="Content\Clases\DataClases\Info\Tag\TagsCollection.cs" />
     <Compile Include="Content\Clases\DataClases\Keyboard\KeyRange.cs" />
     <Compile Include="Content\Clases\WorkClases\Keyboard\HotKeyCheck.cs" />
     <Compile Include="Content\Clases\WorkClases\Keyboard\KeyActionProcessor.cs" />
@@ -113,6 +118,9 @@
     </Compile>
     <Compile Include="Content\Controls\Tags\TagControl.xaml.cs">
       <DependentUpon>TagControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Content\Controls\Tags\TagsGroup.xaml.cs">
+      <DependentUpon>TagsGroup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Content\Controls\Tags\TagsList.xaml.cs">
       <DependentUpon>TagsList.xaml</DependentUpon>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TegSetter.Content.Clases.DataClases.Info;
+using TegSetter.Content.Clases.DataClases.Info.Tag;
 
 namespace TegSetter.Content.Clases.WorkClases.Tags
 {
@@ -24,13 +25,13 @@ namespace TegSetter.Content.Clases.WorkClases.Tags
         /// <summary>
         /// Получаем только новые теги
         /// </summary>
-        /// <param name="currentList">Текущий список тегов</param>
+        /// <param name="currentCollection">Текущая коллекция тегов</param>
         /// <param name="scannedList">Считанный из файлов список тегов</param>
         /// <returns>Список новых считанных тегов</returns>
-        public List<string> GetNewTags(List<TagInfo> currentList, List<string> scannedList)
+        public List<string> GetNewTags(TagsCollection currentCollection, List<string> scannedList)
         {
             //Получаем список имён тегов из списка классов тегов
-            IEnumerable<string> tags = currentList.Select(tag => tag.Name);
+            List<string> tags = currentCollection.GetTagNames();
             //Получаем теги, которые есть в считанном списке, но которых нет в общем
             return scannedList.Except(tags).ToList();
         }
