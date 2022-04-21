@@ -12,18 +12,24 @@
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
+            <RowDefinition Height="50" />
             <RowDefinition />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <!-- Кнопки выделения -->
-        <Button x:Name="SelectAllButton" Content="Выбрать все" HorizontalAlignment="Left" Width="150" Click="SelectAllButton_Click" />
-        <Button x:Name="UnSelectAllButton" Content="Сбросить все" HorizontalAlignment="Right" Width="150" Click="UnSelectAllButton_Click" />
+        <Button x:Name="SelectAllButton" Grid.Row="0" Content="Выбрать все" HorizontalAlignment="Left" Width="150" Click="SelectAllButton_Click" />
+        <Button x:Name="UnSelectAllButton" Grid.Row="0" Content="Сбросить все" HorizontalAlignment="Right" Width="150" Click="UnSelectAllButton_Click" />
+        <!-- Панель поиска -->
+        <StackPanel Grid.Row="1" Margin="5">
+            <TextBlock Text="Поиск по группам:" Margin="0,0,0,5" />
+            <TextBox x:Name="SearchTextBox" TextChanged="SearchTextBox_TextChanged" />
+        </StackPanel>
         <!-- Панель скролла -->
-        <ScrollViewer Grid.Row="1" Margin="0,5,0,5" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="2" Margin="0,5,0,5" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <!-- Панель для добавления тегов -->
             <StackPanel x:Name="TagsPanel" />
         </ScrollViewer>
         <!-- Кнопка принятия тегов -->
-        <Button x:Name="OkButton" Content="Выбрать теги" Grid.Row="2" Click="OkButton_Click" />
+        <Button x:Name="OkButton" Content="Выбрать теги" Grid.Row="3" Click="OkButton_Click" />
     </Grid>
 </Window>

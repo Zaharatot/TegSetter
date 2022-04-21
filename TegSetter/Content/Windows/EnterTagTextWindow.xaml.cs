@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TegSetter.Content.Clases.DataClases.Info;
+using TegSetter.Content.Clases.DataClases.Info.Tag;
 
 namespace TegSetter.Content.Windows
 {
@@ -25,6 +26,14 @@ namespace TegSetter.Content.Windows
         /// Проверка наличия текста тега
         /// </summary>
         public bool IsContainTagName => !string.IsNullOrEmpty(TagNameTextBox.Text);
+        /// <summary>
+        /// Имя группы тега
+        /// </summary>
+        public string TagGroupName
+        {
+            get => TagGroupTextBox.Text;
+            set => TagGroupTextBox.Text = value;
+        }
 
         /// <summary>
         /// Конструктор окна
@@ -66,7 +75,6 @@ namespace TegSetter.Content.Windows
             //ПРоставляем значения в контролл
             TagDescriptionTextBox.Text = tag.Description;
             TagNameTextBox.Text = tag.Name;
-            TagGroupTextBox.Text = tag.Group;
         }
 
         /// <summary>
@@ -76,8 +84,7 @@ namespace TegSetter.Content.Windows
         public TagInfo GetTag() =>
             new TagInfo() {
                 Name = TagNameTextBox.Text,
-                Description = TagDescriptionTextBox.Text,
-                Group = TagGroupTextBox.Text
+                Description = TagDescriptionTextBox.Text
             };
 
     }

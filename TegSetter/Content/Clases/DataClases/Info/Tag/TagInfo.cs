@@ -22,10 +22,6 @@ namespace TegSetter.Content.Clases.DataClases.Info.Tag
         /// </summary>
         public string Description { get; set; }
         /// <summary>
-        /// Имя группы в которой состоит тег
-        /// </summary>
-        public string Group { get; set; }
-        /// <summary>
         /// Буква тега
         /// </summary>
         [XmlIgnore]
@@ -37,7 +33,7 @@ namespace TegSetter.Content.Clases.DataClases.Info.Tag
         public TagInfo()
         {
             //Проставляем дефолтные значения
-            Name = Description = Group = "";
+            Name = Description = "";
             Letter = null;
         }
 

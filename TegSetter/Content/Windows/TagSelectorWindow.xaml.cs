@@ -52,6 +52,19 @@ namespace TegSetter.Content.Windows
             //Проставляем статус всем тегам
             SetAllTagsSelectionState(false);
 
+        /// <summary>
+        /// Обработчик события изменения текста для поиска
+        /// </summary>
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //Проходимся по группам в панели
+            foreach (TagsGroup group in TagsPanel.Children)
+                //Если в группе отображается хоть один тег
+                group.Visibility = group.SearchTags(SearchTextBox.Text)
+                    //Мы группу отобюражаем, а в противном случае - скрываем
+                    ? Visibility.Visible : Visibility.Collapsed;
+        }
+
 
         /// <summary>
         /// Обработчик события нажатия кнопки в окне

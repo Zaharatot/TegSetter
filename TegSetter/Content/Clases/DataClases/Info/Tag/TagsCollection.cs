@@ -94,5 +94,12 @@ namespace TegSetter.Content.Clases.DataClases.Info.Tag
             //Добавляем тег в группу
             group.Tags.Add(tag);
         }
+
+        /// <summary>
+        /// Сбрасываем буквы для тегов в группах
+        /// </summary>
+        public void ClearLetters() =>
+            //Проходимся по группам, и для каждой сбрасываем буквы в тегах
+            Groups.ForEach(group => group.ClearLetters());
     }
 }

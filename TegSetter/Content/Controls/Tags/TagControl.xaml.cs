@@ -161,9 +161,17 @@ namespace TegSetter.Content.Controls.Tags
                 _isSelected = isSelected;
                 //Обновляем цвет фона контролла
                 BackgroundBorder.Background = (isSelected)
-                    ? Brushes.LightBlue : Brushes.White;
+                    ? Brushes.LightBlue : Brushes.LightGray;
             }
         }
+
+        /// <summary>
+        /// Проверка содержания текста в имени тега
+        /// </summary>
+        /// <param name="text">Текст для поиска</param>
+        /// <returns>True - текст содержится</returns>
+        public bool IsTagNameContainsText(string text) =>
+            TagNameTextBlock.Text.ToLower().Contains(text.ToLower());
 
     }
 }

@@ -97,11 +97,10 @@ namespace TegSetter.Content.Windows
         {
             //Получаем идентификатор страницы
             int id = PagingControl.GetPageId();
-            //Добавляем картинке тег
-            _mainWork.AddImageTag(id, tag);
-            //Добавляем тег в контролл тегов картинки
-            ImageTagsControl.AddTag(tag);
+            //Вставляем тег в картинку
+            AddTagToImage(id, tag);
         }
+
 
         /// <summary>
         /// Обработчик событяи нажатия на кнопку
@@ -157,6 +156,39 @@ namespace TegSetter.Content.Windows
                 _mainWork.SetNewTagsDict(tags);
             }
         }
+
+
+        /// <summary>
+        /// Обработчик событяи клика по кнопке создания шаблона
+        /// </summary>
+        private void AddTemplateWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Инициализируем окно выбора тегов
+            TagSelectorWindow tagSelectorWindow = new TagSelectorWindow();
+            //Загружаем в окно полный список тегов
+            tagSelectorWindow.SetTagsToList(_mainWork.GetTagsCollection());
+            //Проставляем в окно теги шаблона
+            tagSelectorWindow.SetSelectedTags(_mainWork.GetTemplateTagsNames());
+            //Отображаем окно как диалоговое
+            bool? result = tagSelectorWindow.ShowDialog();
+            //Если окно закрылось с успехом
+            if (result.GetValueOrDefault(false))
+                //Проставляем выбранные теги как шаблон
+                _mainWork.TagsTemplate = tagSelectorWindow.GetSelectedTags();
+        }
+
+        /// <summary>
+        /// Обработчик событяи клика по кнопке вставки шаблона
+        /// </summary>
+        private void SetTemplateWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Получаем идентификатор страницы
+            int id = PagingControl.GetPageId();
+            //Проходимся по тегам шаблона, и добавляем их к текущей картинке
+            _mainWork.TagsTemplate.ForEach(tag => AddTagToImage(id, tag));
+        }
+
+
 
         /// <summary>
         /// Обработчик событяи клика по кнопке загрузки папки
@@ -243,6 +275,19 @@ namespace TegSetter.Content.Windows
                     //Добавляем выбранные теги в список
                     _mainWork.AddTags(tagSelectorWindow.GetSelectedTags());
             }
+        }
+
+        /// <summary>
+        /// Вставляем тег в картинку
+        /// </summary>
+        /// <param name="id">Id текущего выбранного изображения</param>
+        /// <param name="tag">Тег для добавления</param>
+        private void AddTagToImage(int id, TagInfo tag)
+        {
+            //Добавляем картинке тег
+            _mainWork.AddImageTag(id, tag);
+            //Добавляем тег в контролл тегов картинки
+            ImageTagsControl.AddTag(tag);
         }
     }
 }

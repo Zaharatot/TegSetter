@@ -19,6 +19,12 @@ namespace TegSetter.Content.Clases.WorkClases
     internal class MainWork
     {
         /// <summary>
+        /// Шаблон тегов
+        /// </summary>
+        public List<TagInfo> TagsTemplate { get; set; }
+        
+
+        /// <summary>
         /// Класс загрузки и сохранения изображений
         /// </summary>
         private ImageLoader _imageLoader;
@@ -62,6 +68,8 @@ namespace TegSetter.Content.Clases.WorkClases
         /// </summary>
         private void Init()
         {
+            //Инициализируем дефолтные значения 
+            TagsTemplate = new List<TagInfo>();
             //Список изображений для работы
             _images = new List<ImageInfo>();
             _tags = new TagsCollection();
@@ -87,8 +95,13 @@ namespace TegSetter.Content.Clases.WorkClases
         /// Формируем ключ-пары из тегов и клавишь
         /// </summary>
         /// <param name="tags">Список тегов</param>
-        public void PairKeysToTags(ref List<TagInfo> tags) =>
+        public void PairKeysToTags(ref List<TagInfo> tags)
+        {
+            //Сбьрасываем старые буквы для тегов
+            _tags.ClearLetters();
+            //Добавляем новые буквы для тегшов
             _keyMapper.PairKeysToTags(ref tags);
+        }
 
         /// <summary>
         /// Выполняем загрузку списка тегов
@@ -218,5 +231,11 @@ namespace TegSetter.Content.Clases.WorkClases
         /// <returns>Количество загруженных изображений</returns>
         public int GetImagesCount() => _images.Count;
 
+        /// <summary>
+        /// Получаем имена тегов шаблона
+        /// </summary>
+        /// <returns>Список имён тегов шаблона</returns>
+        public List<string> GetTemplateTagsNames() =>
+            TagsTemplate.Select(tag => tag.Name).ToList();
     }
 }

@@ -43,6 +43,7 @@ namespace TegSetter.Content.Clases.WorkClases.Loaders
             _serializer = new XmlSerializer(typeof(TagsCollection));
         }
 
+
         /// <summary>
         /// Формируем путь к файлу тегов
         /// </summary>
@@ -85,6 +86,20 @@ namespace TegSetter.Content.Clases.WorkClases.Loaders
                 //Сохраняем байты в файл
                 File.WriteAllBytes(_tagsPath, ms.ToArray());
             }
+        }
+    }
+
+
+    public class TagsWrapper
+    {
+        public List<TagInfo> Tags { get; set; }
+
+        /// <summary>
+        /// Конструктор класса
+        /// </summary>
+        public TagsWrapper()
+        {
+
         }
     }
 }

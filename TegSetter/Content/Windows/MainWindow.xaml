@@ -26,6 +26,10 @@
                 <Button x:Name="SaveChangesButton" Content="Сохранить изменения" Padding="5,0" Margin="0,0,5,0" Click="SaveChangesButton_Click" />
                 <!-- Кнопка окна тегов -->
                 <Button x:Name="TagsWindowButton" Content="Окно тегов" Padding="5,0" Margin="0,0,5,0" Click="TagsWindowButton_Click"  />
+                <!-- Кнопка создания шаблона -->
+                <Button x:Name="AddTemplateWindowButton" Content="Создать шаблон" Padding="5,0" Margin="0,0,5,0" Click="AddTemplateWindowButton_Click" />
+                <!-- Кнопка вставки шаблона -->
+                <Button x:Name="SetTemplateWindowButton" Content="Вставить шаблон" Padding="5,0" Margin="0,0,5,0" Click="SetTemplateWindowButton_Click" />
             </StackPanel>
         </Border>
         <!-- Центральная панель -->

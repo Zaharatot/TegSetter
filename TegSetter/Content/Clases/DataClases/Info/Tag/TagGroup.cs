@@ -51,6 +51,18 @@ namespace TegSetter.Content.Clases.DataClases.Info.Tag
         }
 
         /// <summary>
+        /// Конструктор класса
+        /// </summary>
+        /// <param name="groupName">Имя добавляемой группы тегов</param>
+        /// <param name="tag">Тег для добавления в группу</param>
+        public TagGroup(TagInfo tag, string groupName)
+        {
+            //Проставляем дефолтные значения
+            Tags = new List<TagInfo>() { tag };
+            GroupName = groupName;
+        }
+
+        /// <summary>
         /// Возвращаем список имён тегов из данной группы
         /// </summary>
         /// <returns>Список имён тегов</returns>
@@ -89,5 +101,12 @@ namespace TegSetter.Content.Clases.DataClases.Info.Tag
         /// <returns>Список тегов</returns>
         public List<TagInfo> GetOrderedTags() =>
             Tags.OrderBy(tag => tag.Name).ToList();
+
+        /// <summary>
+        /// Сбрасываем буквы для тегов
+        /// </summary>
+        public void ClearLetters() =>
+            //Проходимся по тегам группы и сбрасываем им буквы
+            Tags.ForEach(tag => tag.Letter = null);
     }
 }

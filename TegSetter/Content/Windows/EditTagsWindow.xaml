@@ -10,21 +10,27 @@
         Title="EditTagsWindow" Height="450" Width="380">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
             <RowDefinition />
             <RowDefinition Height="50" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
+        <!-- Панель поиска -->
+        <StackPanel Grid.Row="0" Margin="5">
+            <TextBlock Text="Поиск по группам:" Margin="0,0,0,5" />
+            <TextBox x:Name="SearchTextBox" TextChanged="SearchTextBox_TextChanged" />
+        </StackPanel>
         <!-- Панель скролла -->
-        <ScrollViewer Grid.Row="0" Margin="5" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" Margin="5" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <!-- Панель для добавления тегов -->
             <StackPanel x:Name="TagsPanel" />
         </ScrollViewer>
         <!-- Кнопки работы с тегами -->
-        <Button x:Name="DeleteTagButton" Content="Удалить тег" Grid.Row="1" Margin="5" 
+        <Button x:Name="DeleteTagButton" Content="Удалить тег" Grid.Row="2" Margin="5" 
                 HorizontalAlignment="Left" Width="150" Click="DeleteTagButton_Click" />
-        <Button x:Name="EditTagButton" Content="Изменить тег" Grid.Row="1" Margin="5" 
+        <Button x:Name="EditTagButton" Content="Изменить тег" Grid.Row="2" Margin="5" 
                 HorizontalAlignment="Right" Width="150" Click="EditTagButton_Click" />
-        <Button x:Name="AddTagButton" Content="Добавить тег" Grid.Row="2" Margin="5" 
+        <Button x:Name="AddTagButton" Content="Добавить тег" Grid.Row="3" Margin="5" 
                 HorizontalAlignment="Center" Width="200" Click="AddTagButton_Click" />
     </Grid>
 </Window>

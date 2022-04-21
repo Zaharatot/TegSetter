@@ -21,11 +21,42 @@ namespace TegSetter.Content.Controls.Tags
     /// </summary>
     public partial class TagsGroup : UserControl
     {
+
+        /// <summary>
+        /// Делегат события выделения контролла
+        /// </summary>
+        /// <param name="group">Выделенная группа</param>
+        public delegate void SelectControlEventHandler(TagsGroup group);
+        /// <summary>
+        /// Cобытие выделения контролла
+        /// </summary>
+        public event SelectControlEventHandler SelectControl;
+
         /// <summary>
         /// Флаг одиночного выделения
         /// </summary>
         public bool IsOneSelected { get; set; }
+        /// <summary>
+        /// Флаг постоянно развёрнутого состояния
+        /// </summary>
+        public bool IsAlwaysExpanded { get; set; }
 
+        /// <summary>
+        /// Имя группы тегов
+        /// </summary>
+        public string GroupName => (string)GroupExpander.Header;
+        /// <summary>
+        /// Флаг проверки наличия дочерних тегов
+        /// </summary>
+        public bool IsContainChildTags => TagsPanel.Children.Count != 0;
+        /// <summary>
+        /// Флаг сворачивания блока
+        /// </summary>
+        public bool IsExpanded
+        {
+            get => GroupExpander.IsExpanded;
+            set => GroupExpander.IsExpanded = value;
+        }
 
         /// <summary>
         /// Конструктор контролла
@@ -42,9 +73,20 @@ namespace TegSetter.Content.Controls.Tags
         private void Init()
         {
             //Проставляем дефолтные значения
-            IsOneSelected = false;
+            IsAlwaysExpanded = IsOneSelected = false;
         }
 
+
+        /// <summary>
+        /// Обработчик события завершения сворачивания блока
+        /// </summary>
+        private void GroupExpander_Collapsed(object sender, RoutedEventArgs e)
+        {
+            //Если стоит флаг всегда развёрнутого блока
+            if(IsAlwaysExpanded)
+                //Отменяем сворачивание
+                GroupExpander.IsExpanded = true;
+        }
 
         /// <summary>
         /// Обработчик события выбора тега
@@ -53,7 +95,7 @@ namespace TegSetter.Content.Controls.Tags
         private void Elem_SelectControl(TagControl tag)
         {
             //Если может быть выделен только один элемент
-            if(IsOneSelected)
+            if (IsOneSelected)
             {
                 //Проходимся по тегам
                 foreach (TagControl elem in TagsPanel.Children)
@@ -61,12 +103,14 @@ namespace TegSetter.Content.Controls.Tags
                     elem.IsSelected = false;
                 //Проставляем текущему тэгу выделение
                 tag.IsSelected = true;
+                //Вызываем ивент выделения контролла в группе
+                SelectControl?.Invoke(this);
             }
             //Если может быть выделено несколько элементов
             else
                 //Инвертируем5 текущему тэгу выделение
                 tag.IsSelected = !tag.IsSelected;
-            
+
         }
 
         /// <summary>
@@ -104,6 +148,52 @@ namespace TegSetter.Content.Controls.Tags
         }
 
         /// <summary>
+        /// Проставляем видимость контроллам тегов по тексту поиска
+        /// </summary>
+        /// <param name="text">Текст для поиска в имени тега</param>
+        /// <returns>True - есть хоть один видимый тег</returns>
+        private bool SetTagSearchVisiblity(string text)
+        {
+            //По дефолту - сбрасываем
+            bool ex = false;
+            //Проходимся по тегам в панели
+            foreach (TagControl tag in TagsPanel.Children)
+            {
+                //Если текст в теге содержится
+                if (tag.IsTagNameContainsText(text))
+                {
+                    //Отображаем тег
+                    tag.Visibility = Visibility.Visible;
+                    //Указываем, что хоть один видимый тег есть
+                    ex |= true;
+                }
+                //Если текста в теге нет
+                else
+                    //Скрываем его
+                    tag.Visibility = Visibility.Collapsed;
+            }
+            //Возвращаем результат
+            return ex;
+        }
+
+        /// <summary>
+        /// Проставляем видимость всем контроллам тегов
+        /// </summary>
+        /// <returns>True - возврат тут нужен для совместимости</returns>
+        private bool SetAllTagsVisiblity()
+        {
+            //Проходимся по тегам в панели
+            foreach (TagControl tag in TagsPanel.Children)
+                //Делаем тег видимым
+                tag.Visibility = Visibility.Visible;
+            //Просто говорим что всё ок
+            return true;
+        }
+
+
+
+
+        /// <summary>
         /// Получаем список тегов контролла
         /// </summary>
         /// <returns>Список тегов контролла</returns>
@@ -119,8 +209,21 @@ namespace TegSetter.Content.Controls.Tags
             return ex;
         }
 
+        /// <summary>
+        /// Добавляем тег в группу
+        /// </summary>
+        /// <param name="tag">Тег для добавления</param>
+        public void AddTag(TagInfo tag) =>
+            //Добавляем тег на панель
+            TagsPanel.Children.Add(CreateTagControl(tag));
 
-
+        /// <summary>
+        /// Удаляем тег из группы
+        /// </summary>
+        /// <param name="tag">Контролл тега для удаления</param>
+        public void DeleteTag(TagControl tag) =>
+            //Удаляем переданный контролл с панели
+            TagsPanel.Children.Remove(tag);
 
         /// <summary>
         /// Проставляем выбранные теги
@@ -131,7 +234,7 @@ namespace TegSetter.Content.Controls.Tags
             //Проходимся по тегам в панели
             foreach (TagControl tag in TagsPanel.Children)
                 //Если имя тега есть в списке - выделяем тег
-                tag.IsSelected = tags.Contains(tag.TagValue.Name);            
+                tag.IsSelected = tags.Contains(tag.TagValue.Name);
         }
 
         /// <summary>
@@ -203,5 +306,23 @@ namespace TegSetter.Content.Controls.Tags
         public TagGroup GetGroup() =>
             //Формируем группу из списка тегов и заголовка контролла
             new TagGroup(GetTags(), (string)GroupExpander.Header);
+    
+
+        /// <summary>
+        /// Проверка содержания текста в имени группы
+        /// </summary>
+        /// <param name="text">Текст для поиска</param>
+        /// <returns>True - текст содержится</returns>
+        public bool SearchTags(string text)
+        {
+            //Если текст пустой
+            if (string.IsNullOrEmpty(text))
+                //Проставляем видимость всем контроллам тегов
+                return SetAllTagsVisiblity();
+            //В противном случае
+            else
+                //Проставляем видимость контроллам тегов по тексту поиска
+                return SetTagSearchVisiblity(text);
+        }
     }
 }
