@@ -141,6 +141,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Content\Windows\SetTagsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Content\Windows\TagSelectorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -149,6 +153,9 @@
   <ItemGroup>
     <Compile Include="Content\Windows\OpenFolderWinodw.xaml.cs">
       <DependentUpon>OpenFolderWinodw.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Content\Windows\SetTagsWindow.xaml.cs">
+      <DependentUpon>SetTagsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Content\Windows\TagSelectorWindow.xaml.cs">
       <DependentUpon>TagSelectorWindow.xaml</DependentUpon>

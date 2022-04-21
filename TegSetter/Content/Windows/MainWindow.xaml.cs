@@ -158,6 +158,31 @@ namespace TegSetter.Content.Windows
         }
 
 
+
+        /// <summary>
+        /// Обработчик событяи клика по кнопке альтернативного добавления тегов
+        /// </summary>
+        private void AlternateSetTagsButton_Click(object sender, RoutedEventArgs e)
+        {
+            //ИНициализируем окно простановки
+            SetTagsWindow setTagsWindow = new SetTagsWindow();
+            //Получаем идентификатор страницы
+            int id = PagingControl.GetPageId();
+            //Вставляем в окно текущую коллекцию тегов и список выбранных у текущей картинки тегов
+            setTagsWindow.SetCollection(_mainWork.GetTagsCollection(), _mainWork.GetImageTagNames(id));
+            //Отображаем окно как диалоговое
+            bool? result = setTagsWindow.ShowDialog();
+            //Если окно закрылось с успехом
+            if (result.GetValueOrDefault(false))
+            {
+                //Получаем выбранные в окне теги
+                List<TagInfo> tags = setTagsWindow.GetSelectedTags();
+                //Проходимся по выбранным тегам, и добавляем их к текущей картинке
+                tags.ForEach(tag => AddTagToImage(id, tag));
+            }
+        }
+
+
         /// <summary>
         /// Обработчик событяи клика по кнопке создания шаблона
         /// </summary>

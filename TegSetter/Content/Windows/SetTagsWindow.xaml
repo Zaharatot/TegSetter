@@ -1,0 +1,37 @@
+﻿<Window xmlns:Tags="clr-namespace:TegSetter.Content.Controls.Tags"  xmlns:Controls="clr-namespace:TegSetter.Content.Controls"  x:Class="TegSetter.Content.Windows.SetTagsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TegSetter.Content.Windows"
+        mc:Ignorable="d" KeyDown="Window_KeyDown" 
+        Background="#444" WindowStartupLocation="CenterScreen"
+        Title="SetTagsWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        
+        <!-- Контролл пейджинга для листания страниц -->
+        <Controls:PagingPanel x:Name="GroupsPaging" Grid.Row="0" />
+        <!-- Скролл для отображения группы -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+                      HorizontalScrollBarVisibility="Hidden" >
+            <Tags:TagsGroup x:Name="GroupBlock" />
+        </ScrollViewer>
+        <!-- Рамка для кнопок -->
+        <Border Grid.Row="2" Margin="5" CornerRadius="10" Padding="10, 5" 
+                Background="Gray" BorderBrush="Black" BorderThickness="2">
+            <Grid>
+                <!-- Кнопка принятия тегов -->
+                <Button x:Name="SetTagsButton" Content="Принять проставленные теги" HorizontalAlignment="Right" 
+                        Padding="10, 0" Click="SetTagsButton_Click" />
+                <!-- Кнопка принятия тегов -->
+                <Button x:Name="CancelTagsButton" Content="Отменить простановку" HorizontalAlignment="Left" 
+                        Padding="10, 0" Click="CancelTagsButton_Click" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -194,6 +194,23 @@ namespace TegSetter.Content.Clases.WorkClases
         }
 
         /// <summary>
+        /// Получаем все теги изображения
+        /// </summary>
+        /// <param name="id">Идентификатор изображения</param>
+        /// <returns>Список тегов изображения</returns>
+        public List<string> GetImageTagNames(int id)
+        {
+            //Получаем картинку по идентификатору
+            ImageInfo image = LoadImage(id);
+            //Если картинка найдена
+            if (image != null)
+                //Возвращаем её теги
+                return image.Tags;
+            //Во всех остальных случаях вернём пустой список
+            return new List<string>();
+        }
+
+        /// <summary>
         /// Добавляем тег картинке
         /// </summary>
         /// <param name="id">Идентификатор изображения</param>
